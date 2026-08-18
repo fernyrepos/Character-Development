@@ -20,9 +20,6 @@ namespace WantsAndQuirks
         private static Color MentalBreakRectColor = new ColorInt(57, 45, 45).ToColor;
         private static Color MentalBreakTextColor = new ColorInt(184, 133, 134).ToColor;
 
-        private static Color ProgressBarBgColor = new ColorInt(62, 58, 58).ToColor;
-        private static Color ProgressBarFillColor = new ColorInt(63, 90, 114).ToColor;
-
         public ITab_Pawn_WantsAndQuirks()
         {
             labelKey = "WQ_Wants";
@@ -74,17 +71,17 @@ namespace WantsAndQuirks
             if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
             {
                 var needed = WantsAndQuirksMod.settings.pointsNeededForReward;
-                var fill = Mathf.Clamp01((float)data.characterPoints / needed);
-                var barRect = new Rect(rect.x, curY, rect.width, 20f);
-                Widgets.DrawBoxSolid(barRect, ProgressBarBgColor);
-                Widgets.DrawBoxSolid(new Rect(barRect.x, barRect.y, barRect.width * fill, barRect.height), ProgressBarFillColor);
-                Text.Font = GameFont.Tiny;
-                Text.Anchor = TextAnchor.MiddleCenter;
-                Widgets.Label(barRect, "WQ_PawnCharacterPointsBar".Translate(data.characterPoints, needed));
-                Text.Anchor = TextAnchor.UpperLeft;
-                curY += 24f;
+                Text.Font = GameFont.Medium;
+                Text.Anchor = TextAnchor.UpperCenter;
+                Widgets.Label(new Rect(rect.x, curY, rect.width, 30f), "WQ_CharacterPoints".Translate());
+                curY += 30f;
+
+                var barRect = new Rect(rect.x, curY, rect.width, 24f);
+                MainTabWindow_Characters.DrawCharacterPointsTracker(barRect, data.characterPoints, needed, pawn);
+                curY += 30f;
 
                 Text.Font = GameFont.Tiny;
+                Text.Anchor = TextAnchor.UpperLeft;
                 GUI.color = Color.gray;
                 Widgets.Label(new Rect(rect.x, curY, rect.width, 20f), "WQ_PawnUnlockedModifiers".Translate(data.rewardPoints));
                 GUI.color = Color.white;
