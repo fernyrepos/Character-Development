@@ -260,19 +260,22 @@ namespace WantsAndQuirks
             var innerRect = new Rect(rect.x, rect.y + 10, rect.width - 20, rect.height - 10);
             var curY = innerRect.y;
 
-            Text.Font = GameFont.Medium;
-            Text.Anchor = TextAnchor.UpperCenter;
-            Widgets.Label(new Rect(innerRect.x, curY - 5, innerRect.width, 30f), "WQ_CharacterPoints".Translate());
-            curY += 30f;
+            if (!WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+            {
+                Text.Font = GameFont.Medium;
+                Text.Anchor = TextAnchor.UpperCenter;
+                Widgets.Label(new Rect(innerRect.x, curY - 5, innerRect.width, 30f), "WQ_CharacterPoints".Translate());
+                curY += 30f;
 
-            var barRect = new Rect(innerRect.x, curY, innerRect.width, 24f);
-            DrawCharacterPointsTracker(barRect, State.characterPoints, WantsAndQuirksMod.settings.pointsNeededForReward, null);
-            curY += 30f;
+                var barRect = new Rect(innerRect.x, curY, innerRect.width, 24f);
+                DrawCharacterPointsTracker(barRect, State.characterPoints, WantsAndQuirksMod.settings.pointsNeededForReward, null);
+                curY += 30f;
 
-            Text.Font = GameFont.Tiny;
-            Text.Anchor = TextAnchor.UpperLeft;
-            Widgets.Label(new Rect(innerRect.x, curY, innerRect.width, 40f), "WQ_ProgressBarDesc".Translate());
-            curY += 40f;
+                Text.Font = GameFont.Tiny;
+                Text.Anchor = TextAnchor.UpperLeft;
+                Widgets.Label(new Rect(innerRect.x, curY, innerRect.width, 40f), "WQ_ProgressBarDesc".Translate());
+                curY += 40f;
+            }
 
             Text.Font = GameFont.Small;
             Widgets.Label(new Rect(innerRect.x, curY, innerRect.width, 24f), "WQ_CharactersWithWants".Translate());

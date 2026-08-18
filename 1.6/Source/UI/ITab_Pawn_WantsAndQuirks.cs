@@ -71,12 +71,7 @@ namespace WantsAndQuirks
             if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
             {
                 var needed = WantsAndQuirksMod.settings.pointsNeededForReward;
-                Text.Font = GameFont.Medium;
-                Text.Anchor = TextAnchor.UpperCenter;
-                Widgets.Label(new Rect(rect.x, curY, rect.width, 30f), "WQ_CharacterPoints".Translate());
-                curY += 30f;
-
-                var barRect = new Rect(rect.x, curY, rect.width, 24f);
+                var barRect = new Rect(rect.x, curY, rect.width - 10f, 24f);
                 MainTabWindow_Characters.DrawCharacterPointsTracker(barRect, data.characterPoints, needed, pawn);
                 curY += 30f;
 
