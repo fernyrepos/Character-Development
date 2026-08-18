@@ -498,12 +498,6 @@ namespace WantsAndQuirks
 
         private void ClaimReward(RewardNode node)
         {
-            if (State.rewardPoints <= 0)
-            {
-                Messages.Message("WQ_NotEnoughRewardPoints".Translate(), MessageTypeDefOf.RejectInput, false);
-                return;
-            }
-
             var allCandidates = PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction
                 .Where(p => p.CanHaveWants() && node.def.Worker.CanBestowOn(p, node.item, node.pawnTarget)).ToList();
 
@@ -519,6 +513,11 @@ namespace WantsAndQuirks
             }
             else
             {
+                if (State.rewardPoints <= 0)
+                {
+                    Messages.Message("WQ_NotEnoughRewardPoints".Translate(), MessageTypeDefOf.RejectInput, false);
+                    return;
+                }
                 recipients = allCandidates;
             }
 

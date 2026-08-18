@@ -53,7 +53,6 @@ namespace WantsAndQuirks
 
                 if (Widgets.ButtonInvisible(rowRect))
                 {
-                    State.rewardPoints = Mathf.Max(State.rewardPoints - 1, 0);
                     if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
                     {
                         var pData = p.GetWantsData();
@@ -61,6 +60,10 @@ namespace WantsAndQuirks
                         {
                             pData.rewardPoints--;
                         }
+                    }
+                    else
+                    {
+                        State.rewardPoints = Mathf.Max(State.rewardPoints - 1, 0);
                     }
                     WantsAndQuirksUtility.AddQuirk(p, node.def, node.item, node.pawnTarget);
                     SoundDefOf.Quest_Succeded.PlayOneShotOnCamera();

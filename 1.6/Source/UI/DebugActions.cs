@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LudeonTK;
+using RimWorld;
 using Verse;
 
 namespace WantsAndQuirks
@@ -133,6 +134,17 @@ namespace WantsAndQuirks
             State.characterPoints = 0;
             State.currentCharacterPointsNeeded = 0;
             State.rewardPoints = 0;
+
+            foreach (var pawn in PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction)
+            {
+                if (!pawn.CanHaveWants())
+                    continue;
+
+                var data = pawn.GetWantsData();
+                data.characterPoints = 0;
+                data.currentCharacterPointsNeeded = 0;
+                data.rewardPoints = 0;
+            }
         }
     }
 }
