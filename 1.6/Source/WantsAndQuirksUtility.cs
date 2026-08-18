@@ -159,7 +159,6 @@ namespace WantsAndQuirks
                 var pawnData = pawn.GetWantsData();
                 var pawnNeeded = GetPawnCharacterPointsNeeded(pawnData);
                 pawnData.characterPoints = Mathf.Max(pawnData.characterPoints + amount, 0);
-                pawnData.currentCharacterPointsNeeded = pawnNeeded;
                 while (pawnData.characterPoints >= pawnNeeded)
                 {
                     pawnData.characterPoints -= pawnNeeded;
