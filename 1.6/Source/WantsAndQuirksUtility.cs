@@ -144,6 +144,10 @@ namespace WantsAndQuirks
             {
                 State.characterPoints -= WantsAndQuirksMod.settings.pointsNeededForReward;
                 State.rewardPoints++;
+                if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints && pawn != null)
+                {
+                    pawn.GetWantsData().rewardPoints++;
+                }
                 if (pawn != null)
                 {
                     Messages.Message("WQ_RewardPointEarned".Translate(pawn.Named("PAWN")), null, MessageTypeDefOf.PositiveEvent, false);

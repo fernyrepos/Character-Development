@@ -321,7 +321,12 @@ namespace WantsAndQuirks
                 for (int j = 0; j < pawns.Count; j++)
                 {
                     var p = pawns[j];
-                    if (p.CanHaveWants() && p.GetWantsData().activeWants.Count > 0)
+                    if (!p.CanHaveWants())
+                        continue;
+                    var pawnData = p.GetWantsData();
+                    bool hasWants = pawnData.activeWants.Count > 0;
+                    bool hasPoints = WantsAndQuirksMod.settings.pawnSpecificRewardPoints && pawnData.rewardPoints > 0;
+                    if (hasWants || hasPoints)
                     {
                         tempPawns.Add(p);
                     }
@@ -357,7 +362,15 @@ namespace WantsAndQuirks
                 Widgets.Label(new Rect(rowRect.x + 40f, rowRect.y, 150f, 35f), p.LabelShort);
 
                 Text.Anchor = TextAnchor.MiddleRight;
-                Widgets.Label(new Rect(rowRect.xMax - 100f, rowRect.y, 90f, 35f), "WQ_WantsCount".Translate(p.GetWantsData().activeWants.Count));
+                if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+                {
+                    var pawnPoints = p.GetWantsData().rewardPoints;
+                    Widgets.Label(new Rect(rowRect.xMax - 120f, rowRect.y, 110f, 35f), "WQ_PawnRewardPoints".Translate(pawnPoints));
+                }
+                else
+                {
+                    Widgets.Label(new Rect(rowRect.xMax - 100f, rowRect.y, 90f, 35f), "WQ_WantsCount".Translate(p.GetWantsData().activeWants.Count));
+                }
                 Text.Anchor = TextAnchor.UpperLeft;
 
                 pY += 38f;
@@ -517,8 +530,23 @@ namespace WantsAndQuirks
                 return;
             }
 
-            var recipients = PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction
+            var allCandidates = PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction
                 .Where(p => p.CanHaveWants() && node.def.Worker.CanBestowOn(p, node.item, node.pawnTarget)).ToList();
+
+            List<Pawn> recipients;
+            if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+            {
+                recipients = allCandidates.Where(p => p.GetWantsData().rewardPoints > 0).ToList();
+                if (recipients.Count == 0)
+                {
+                    Messages.Message("WQ_NoPawnRewardPoints".Translate(), MessageTypeDefOf.RejectInput, false);
+                    return;
+                }
+            }
+            else
+            {
+                recipients = allCandidates;
+            }
 
             if (recipients.Count == 0)
             {
