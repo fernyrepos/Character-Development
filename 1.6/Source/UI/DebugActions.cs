@@ -131,6 +131,7 @@ namespace WantsAndQuirks
         public static void ResetPoints()
         {
             State.characterPoints = 0;
+            State.currentCharacterPointsNeeded = 0;
             State.rewardPoints = 0;
         }
     }

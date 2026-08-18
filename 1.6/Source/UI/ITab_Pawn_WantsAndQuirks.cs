@@ -70,7 +70,7 @@ namespace WantsAndQuirks
 
             if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
             {
-                var needed = WantsAndQuirksMod.settings.pointsNeededForReward;
+                var needed = WantsAndQuirksUtility.GetPawnCharacterPointsNeeded(data);
                 var barRect = new Rect(rect.x, curY, rect.width - 10f, 24f);
                 MainTabWindow_Characters.DrawCharacterPointsTracker(barRect, data.characterPoints, needed, pawn);
                 curY += 30f;

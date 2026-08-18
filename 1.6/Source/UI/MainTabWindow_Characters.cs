@@ -268,7 +268,7 @@ namespace WantsAndQuirks
                 curY += 30f;
 
                 var barRect = new Rect(innerRect.x, curY, innerRect.width, 24f);
-                DrawCharacterPointsTracker(barRect, State.characterPoints, WantsAndQuirksMod.settings.pointsNeededForReward, null);
+                DrawCharacterPointsTracker(barRect, State.characterPoints, WantsAndQuirksUtility.GetGlobalCharacterPointsNeeded(), null);
                 curY += 30f;
 
                 Text.Font = GameFont.Tiny;
