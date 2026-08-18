@@ -53,7 +53,7 @@ namespace WantsAndQuirks
 
                 if (Widgets.ButtonInvisible(rowRect))
                 {
-                    State.rewardPoints--;
+                    State.rewardPoints = Mathf.Max(State.rewardPoints - 1, 0);
                     if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
                     {
                         var pData = p.GetWantsData();
