@@ -54,6 +54,14 @@ namespace WantsAndQuirks
                 if (Widgets.ButtonInvisible(rowRect))
                 {
                     State.rewardPoints--;
+                    if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+                    {
+                        var pData = p.GetWantsData();
+                        if (pData.rewardPoints > 0)
+                        {
+                            pData.rewardPoints--;
+                        }
+                    }
                     WantsAndQuirksUtility.AddQuirk(p, node.def, node.item, node.pawnTarget);
                     SoundDefOf.Quest_Succeded.PlayOneShotOnCamera();
 

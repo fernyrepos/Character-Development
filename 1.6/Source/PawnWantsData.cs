@@ -173,6 +173,8 @@ namespace WantsAndQuirks
         public List<Quirk> quirks;
         public List<GrantedGeneLink> grantedGenes = new List<GrantedGeneLink>();
         public int nextWantTick;
+        public int rewardPoints;
+        public int characterPoints;
 
         public PawnWantsData()
         {
@@ -187,6 +189,8 @@ namespace WantsAndQuirks
             Scribe_Collections.Look(ref quirks, "quirks", LookMode.Deep);
             Scribe_Collections.Look(ref grantedGenes, "grantedGenes", LookMode.Deep);
             Scribe_Values.Look(ref nextWantTick, "nextWantTick", -1);
+            Scribe_Values.Look(ref rewardPoints, "rewardPoints", 0);
+            Scribe_Values.Look(ref characterPoints, "characterPoints", 0);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {

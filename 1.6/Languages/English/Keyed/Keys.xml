@@ -46,4 +46,9 @@
   <WQ_TraitRemoved>{0}'s trait was removed: {1}.</WQ_TraitRemoved>
   <WQ_RerollWantWithCount>Reroll want\n\nRerolls left: {0}</WQ_RerollWantWithCount>
   <WQ_RerollsPerWant>Rerolls allowed per acquired want: {0}</WQ_RerollsPerWant>
+  <WQ_PawnSpecificRewardPoints>Restrict perk unlocks to the pawn that earned them</WQ_PawnSpecificRewardPoints>
+  <WQ_NoPawnRewardPoints>No pawns have unspent reward points. Complete wants to earn points.</WQ_NoPawnRewardPoints>
+  <WQ_PawnRewardPoints>{0} reward pts</WQ_PawnRewardPoints>
+  <WQ_PawnCharacterPointsBar>{0} / {1} character points</WQ_PawnCharacterPointsBar>
+  <WQ_PawnUnlockedModifiers>Unlocked character modifiers: {0}</WQ_PawnUnlockedModifiers>
 </LanguageData>

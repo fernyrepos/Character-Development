@@ -68,6 +68,21 @@ namespace WantsAndQuirks
             GUI.color = Color.white;
             curY += 28f;
 
+            if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+            {
+                var needed = WantsAndQuirksMod.settings.pointsNeededForReward;
+                var barRect = new Rect(rect.x, curY, rect.width - 10f, 24f);
+                MainTabWindow_Characters.DrawCharacterPointsTracker(barRect, data.characterPoints, needed, pawn);
+                curY += 30f;
+
+                Text.Font = GameFont.Tiny;
+                Text.Anchor = TextAnchor.UpperLeft;
+                GUI.color = Color.gray;
+                Widgets.Label(new Rect(rect.x, curY, rect.width, 20f), "WQ_PawnUnlockedModifiers".Translate(data.rewardPoints));
+                GUI.color = Color.white;
+                curY += 24f;
+            }
+
             if (data.activeWants.Count == 0)
             {
                 Text.Font = GameFont.Small;

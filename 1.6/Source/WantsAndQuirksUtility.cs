@@ -153,6 +153,17 @@ namespace WantsAndQuirks
                     Messages.Message("WQ_RewardPointEarnedDebug".Translate(), null, MessageTypeDefOf.PositiveEvent, false);
                 }
             }
+
+            if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints && pawn != null)
+            {
+                var pawnData = pawn.GetWantsData();
+                pawnData.characterPoints = Mathf.Max(pawnData.characterPoints + amount, 0);
+                while (pawnData.characterPoints >= WantsAndQuirksMod.settings.pointsNeededForReward)
+                {
+                    pawnData.characterPoints -= WantsAndQuirksMod.settings.pointsNeededForReward;
+                    pawnData.rewardPoints++;
+                }
+            }
         }
 
         public static void CompleteWant(Pawn pawn, PawnWantsData data, ActiveWant want)

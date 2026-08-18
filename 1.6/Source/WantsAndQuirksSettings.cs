@@ -17,6 +17,7 @@ namespace WantsAndQuirks
         public int startingWantsCount = 0;
         public int maxActiveWants = 4;
         public IntRange wantGenerationFrequencyDays = new IntRange(1, 8);
+        public bool pawnSpecificRewardPoints = false;
 
         public override void ExposeData()
         {
@@ -32,6 +33,7 @@ namespace WantsAndQuirks
             Scribe_Values.Look(ref startingWantsCount, "startingWantsCount", 0);
             Scribe_Values.Look(ref maxActiveWants, "maxActiveWants", 4);
             Scribe_Values.Look(ref wantGenerationFrequencyDays, "wantGenerationFrequencyDays", new IntRange(1, 8));
+            Scribe_Values.Look(ref pawnSpecificRewardPoints, "pawnSpecificRewardPoints", false);
         }
 
         public void DoSettingsWindowContents(Rect inRect)
@@ -55,6 +57,7 @@ namespace WantsAndQuirks
             maxActiveWants = (int)ls.Slider(maxActiveWants, 1, 10);
             ls.Label("WQ_WantGenerationFrequency".Translate(wantGenerationFrequencyDays.min, wantGenerationFrequencyDays.max));
             ls.IntRange(ref wantGenerationFrequencyDays, 1, 60);
+            ls.CheckboxLabeled("WQ_PawnSpecificRewardPoints".Translate(), ref pawnSpecificRewardPoints);
             ls.End();
         }
     }
