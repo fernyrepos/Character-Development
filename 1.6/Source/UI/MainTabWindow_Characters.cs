@@ -268,7 +268,7 @@ namespace WantsAndQuirks
                 curY += 30f;
 
                 var barRect = new Rect(innerRect.x, curY, innerRect.width, 24f);
-                DrawCharacterPointsTracker(barRect, State.characterPoints, WantsAndQuirksMod.settings.pointsNeededForReward, null);
+                DrawCharacterPointsTracker(barRect, State.characterPoints, WantsAndQuirksUtility.GetGlobalCharacterPointsNeeded(), null);
                 curY += 30f;
 
                 Text.Font = GameFont.Tiny;
@@ -508,12 +508,14 @@ namespace WantsAndQuirks
                 .Where(p => p.CanHaveWants() && node.def.Worker.CanBestowOn(p, node.item, node.pawnTarget)).ToList();
 
             List<Pawn> recipients;
-recipients = allCandidates.Where(p => p.GetWantsData().rewardPoints > 0).ToList();
-if (recipients.Count == 0 && allCandidates.Count > 0)
-{
-    Messages.Message("WQ_NoPawnRewardPoints".Translate(), MessageTypeDefOf.RejectInput, false);
-    return;
-}
+            if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+            {
+                recipients = allCandidates.Where(p => p.GetWantsData().rewardPoints > 0).ToList();
+                if (recipients.Count == 0 && allCandidates.Count > 0)
+                {
+                    Messages.Message("WQ_NoPawnRewardPoints".Translate(), MessageTypeDefOf.RejectInput, false);
+                    return;
+                }
             }
             else
             {

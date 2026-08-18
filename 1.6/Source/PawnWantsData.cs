@@ -175,6 +175,7 @@ namespace WantsAndQuirks
         public int nextWantTick;
         public int rewardPoints;
         public int characterPoints;
+        public int currentCharacterPointsNeeded;
 
         public PawnWantsData()
         {
@@ -191,6 +192,7 @@ namespace WantsAndQuirks
             Scribe_Values.Look(ref nextWantTick, "nextWantTick", -1);
             Scribe_Values.Look(ref rewardPoints, "rewardPoints", 0);
             Scribe_Values.Look(ref characterPoints, "characterPoints", 0);
+            Scribe_Values.Look(ref currentCharacterPointsNeeded, "currentCharacterPointsNeeded", 0);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
