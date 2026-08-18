@@ -364,8 +364,10 @@ namespace WantsAndQuirks
                 Text.Anchor = TextAnchor.MiddleRight;
                 if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
                 {
-                    var pawnPoints = p.GetWantsData().rewardPoints;
-                    Widgets.Label(new Rect(rowRect.xMax - 120f, rowRect.y, 110f, 35f), "WQ_PawnRewardPoints".Translate(pawnPoints));
+                    var pData = p.GetWantsData();
+                    var wantsCount = "WQ_WantsCount".Translate(pData.activeWants.Count);
+                    var rewardPts = "WQ_PawnRewardPoints".Translate(pData.rewardPoints);
+                    Widgets.Label(new Rect(rowRect.xMax - 130f, rowRect.y, 120f, 35f), $"{wantsCount}  |  {rewardPts}");
                 }
                 else
                 {
@@ -382,11 +384,14 @@ namespace WantsAndQuirks
         {
             Widgets.DrawBoxSolid(rect, CenterBgColor);
             var curY = rect.y;
-            Text.Font = GameFont.Small;
-            Text.Anchor = TextAnchor.UpperCenter;
-            Widgets.Label(new Rect(rect.x, curY, rect.width, 24f), "WQ_AvailableRewards".Translate(State.rewardPoints));
-            curY += 24f;
-            Text.Anchor = TextAnchor.UpperLeft;
+            if (!WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+            {
+                Text.Font = GameFont.Small;
+                Text.Anchor = TextAnchor.UpperCenter;
+                Widgets.Label(new Rect(rect.x, curY, rect.width, 24f), "WQ_AvailableRewards".Translate(State.rewardPoints));
+                curY += 24f;
+                Text.Anchor = TextAnchor.UpperLeft;
+            }
 
             var physicsRect = new Rect(rect.x, curY, rect.width, rect.height - 50f - (curY - rect.y));
             var center = new Vector2(physicsRect.width / 2f, physicsRect.height / 2f);
