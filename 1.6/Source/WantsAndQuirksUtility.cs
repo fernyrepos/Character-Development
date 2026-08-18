@@ -154,6 +154,23 @@ namespace WantsAndQuirks
 
         public static void AddCharacterPoints(Pawn pawn, int amount)
         {
+            if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints && pawn != null)
+            {
+                var pawnData = pawn.GetWantsData();
+                var pawnNeeded = GetPawnCharacterPointsNeeded(pawnData);
+                pawnData.characterPoints = Mathf.Max(pawnData.characterPoints + amount, 0);
+                pawnData.currentCharacterPointsNeeded = pawnNeeded;
+                while (pawnData.characterPoints >= pawnNeeded)
+                {
+                    pawnData.characterPoints -= pawnNeeded;
+                    pawnData.rewardPoints++;
+                    pawnNeeded = GetNextCharacterPointsNeeded(pawnNeeded);
+                    pawnData.currentCharacterPointsNeeded = pawnNeeded;
+                    Messages.Message("WQ_RewardPointEarned".Translate(pawn.Named("PAWN")), null, MessageTypeDefOf.PositiveEvent, false);
+                }
+                return;
+            }
+
             var globalNeeded = GetGlobalCharacterPointsNeeded();
             State.characterPoints = Mathf.Max(State.characterPoints + amount, 0);
             State.currentCharacterPointsNeeded = globalNeeded;
@@ -170,21 +187,6 @@ namespace WantsAndQuirks
                 else
                 {
                     Messages.Message("WQ_RewardPointEarnedDebug".Translate(), null, MessageTypeDefOf.PositiveEvent, false);
-                }
-            }
-
-            if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints && pawn != null)
-            {
-                var pawnData = pawn.GetWantsData();
-                var pawnNeeded = GetPawnCharacterPointsNeeded(pawnData);
-                pawnData.characterPoints = Mathf.Max(pawnData.characterPoints + amount, 0);
-                pawnData.currentCharacterPointsNeeded = pawnNeeded;
-                while (pawnData.characterPoints >= pawnNeeded)
-                {
-                    pawnData.characterPoints -= pawnNeeded;
-                    pawnData.rewardPoints++;
-                    pawnNeeded = GetNextCharacterPointsNeeded(pawnNeeded);
-                    pawnData.currentCharacterPointsNeeded = pawnNeeded;
                 }
             }
         }
