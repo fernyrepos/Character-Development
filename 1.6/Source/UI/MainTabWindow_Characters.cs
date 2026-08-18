@@ -508,17 +508,19 @@ namespace WantsAndQuirks
                 .Where(p => p.CanHaveWants() && node.def.Worker.CanBestowOn(p, node.item, node.pawnTarget)).ToList();
 
             List<Pawn> recipients;
-recipients = allCandidates.Where(p => p.GetWantsData().rewardPoints > 0).ToList();
-if (recipients.Count == 0 && allCandidates.Count > 0)
+if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
 {
-    Messages.Message("WQ_NoPawnRewardPoints".Translate(), MessageTypeDefOf.RejectInput, false);
-    return;
+    recipients = allCandidates.Where(p => p.GetWantsData().rewardPoints > 0).ToList();
+    if (recipients.Count == 0 && allCandidates.Count > 0)
+    {
+        Messages.Message("WQ_NoPawnRewardPoints".Translate(), MessageTypeDefOf.RejectInput, false);
+        return;
+    }
 }
-            }
-            else
-            {
-                recipients = allCandidates;
-            }
+else
+{
+    recipients = allCandidates;
+}
 
             if (recipients.Count == 0)
             {
