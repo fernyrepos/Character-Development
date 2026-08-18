@@ -156,10 +156,11 @@ namespace WantsAndQuirks
         {
             if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints && pawn != null)
             {
-                var pawnData = pawn.GetWantsData();
-                var pawnNeeded = GetPawnCharacterPointsNeeded(pawnData);
-                pawnData.characterPoints = Mathf.Max(pawnData.characterPoints + amount, 0);
-                while (pawnData.characterPoints >= pawnNeeded)
+var pawnData = pawn.GetWantsData();
+var pawnNeeded = GetPawnCharacterPointsNeeded(pawnData);
+pawnData.currentCharacterPointsNeeded = pawnNeeded;
+pawnData.characterPoints = Mathf.Max(pawnData.characterPoints + amount, 0);
+while (pawnData.characterPoints >= pawnNeeded)
                 {
                     pawnData.characterPoints -= pawnNeeded;
                     pawnData.rewardPoints++;
