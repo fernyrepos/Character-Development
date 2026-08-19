@@ -40,8 +40,15 @@ namespace WantsAndQuirks
         public override void FillTab()
         {
             var pawn = SelPawn;
-            size = new Vector2(600f, 413f);
             var data = pawn.GetWantsData();
+            if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+            {
+                size = new Vector2(600f, 467f);
+            }
+            else
+            {
+                size = new Vector2(600f, 413f);
+            }
             var rect = new Rect(0f, 0f, size.x, size.y);
 
             Widgets.DrawBoxSolid(rect, BgColor);
@@ -67,6 +74,21 @@ namespace WantsAndQuirks
             Widgets.Label(new Rect(rect.x, curY, rect.width, 24f), "WQ_WantsSubtitle".Translate());
             GUI.color = Color.white;
             curY += 28f;
+
+            if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+            {
+                var needed = WantsAndQuirksUtility.GetPawnCharacterPointsNeeded(data);
+                var barRect = new Rect(rect.x, curY, rect.width - 10f, 24f);
+                MainTabWindow_Characters.DrawCharacterPointsTracker(barRect, data.characterPoints, needed, pawn);
+                curY += 30f;
+
+                Text.Font = GameFont.Tiny;
+                Text.Anchor = TextAnchor.UpperLeft;
+                GUI.color = Color.gray;
+                Widgets.Label(new Rect(rect.x, curY, rect.width, 20f), "WQ_PawnUnlockedModifiers".Translate(data.rewardPoints));
+                GUI.color = Color.white;
+                curY += 24f;
+            }
 
             if (data.activeWants.Count == 0)
             {

@@ -137,13 +137,49 @@ namespace WantsAndQuirks
             }
         }
 
+        public static int GetGlobalCharacterPointsNeeded()
+        {
+            return State.currentCharacterPointsNeeded > 0 ? State.currentCharacterPointsNeeded : Mathf.Max(WantsAndQuirksMod.settings.pointsNeededForReward, 1);
+        }
+
+        public static int GetPawnCharacterPointsNeeded(PawnWantsData data)
+        {
+            return data.currentCharacterPointsNeeded > 0 ? data.currentCharacterPointsNeeded : Mathf.Max(WantsAndQuirksMod.settings.pointsNeededForReward, 1);
+        }
+
+        private static int GetNextCharacterPointsNeeded(int currentNeeded)
+        {
+            return Mathf.Max(currentNeeded + WantsAndQuirksMod.settings.pointsNeededIncreasePerCompletion, 1);
+        }
+
         public static void AddCharacterPoints(Pawn pawn, int amount)
         {
-            State.characterPoints = Mathf.Max(State.characterPoints + amount, 0);
-            while (State.characterPoints >= WantsAndQuirksMod.settings.pointsNeededForReward)
+            if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints && pawn != null)
             {
-                State.characterPoints -= WantsAndQuirksMod.settings.pointsNeededForReward;
+var pawnData = pawn.GetWantsData();
+var pawnNeeded = GetPawnCharacterPointsNeeded(pawnData);
+pawnData.currentCharacterPointsNeeded = pawnNeeded;
+pawnData.characterPoints = Mathf.Max(pawnData.characterPoints + amount, 0);
+while (pawnData.characterPoints >= pawnNeeded)
+                {
+                    pawnData.characterPoints -= pawnNeeded;
+                    pawnData.rewardPoints++;
+                    pawnNeeded = GetNextCharacterPointsNeeded(pawnNeeded);
+                    pawnData.currentCharacterPointsNeeded = pawnNeeded;
+                    Messages.Message("WQ_RewardPointEarned".Translate(pawn.Named("PAWN")), null, MessageTypeDefOf.PositiveEvent, false);
+                }
+                return;
+            }
+
+            var globalNeeded = GetGlobalCharacterPointsNeeded();
+            State.characterPoints = Mathf.Max(State.characterPoints + amount, 0);
+            State.currentCharacterPointsNeeded = globalNeeded;
+            while (State.characterPoints >= globalNeeded)
+            {
+                State.characterPoints -= globalNeeded;
                 State.rewardPoints++;
+                globalNeeded = GetNextCharacterPointsNeeded(globalNeeded);
+                State.currentCharacterPointsNeeded = globalNeeded;
                 if (pawn != null)
                 {
                     Messages.Message("WQ_RewardPointEarned".Translate(pawn.Named("PAWN")), null, MessageTypeDefOf.PositiveEvent, false);

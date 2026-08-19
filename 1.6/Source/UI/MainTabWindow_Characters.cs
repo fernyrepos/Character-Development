@@ -260,54 +260,22 @@ namespace WantsAndQuirks
             var innerRect = new Rect(rect.x, rect.y + 10, rect.width - 20, rect.height - 10);
             var curY = innerRect.y;
 
-            Text.Font = GameFont.Medium;
-            Text.Anchor = TextAnchor.UpperCenter;
-            Widgets.Label(new Rect(innerRect.x, curY - 5, innerRect.width, 30f), "WQ_CharacterPoints".Translate());
-            curY += 30f;
-
-            var barRect = new Rect(innerRect.x, curY, innerRect.width, 24f);
-            var fill = Mathf.Clamp01((float)State.characterPoints / WantsAndQuirksMod.settings.pointsNeededForReward);
-
-            Widgets.DrawBoxSolid(barRect, ProgressBarBgColor);
-            Widgets.DrawBoxSolid(new Rect(barRect.x, barRect.y, barRect.width * fill, barRect.height), ProgressBarFillColor);
-
-            Text.Font = GameFont.Small;
-            Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(new Rect(barRect.x + 5f, barRect.y, 100f, 24f), "0");
-            Text.Anchor = TextAnchor.MiddleRight;
-            Widgets.Label(new Rect(barRect.xMax - 105f, barRect.y, 100f, 24f), WantsAndQuirksMod.settings.pointsNeededForReward.ToString());
-            Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(barRect, State.characterPoints.ToString());
-
-            if (Prefs.DevMode && DebugSettings.godMode)
+            if (!WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
             {
-                var lineHeight = Text.LineHeight;
-                var rectPlus = new Rect(barRect.xMax - lineHeight, barRect.y - lineHeight, lineHeight, lineHeight);
-                if (Widgets.ButtonImage(rectPlus.ContractedBy(4f), TexButton.Plus))
-                {
-                    WantsAndQuirksUtility.AddCharacterPoints(null, 100);
-                }
-                if (Mouse.IsOver(rectPlus))
-                {
-                    TooltipHandler.TipRegion(rectPlus, "+ 100");
-                }
-                var rectMinus = new Rect(rectPlus.xMin - lineHeight, barRect.y - lineHeight, lineHeight, lineHeight);
-                if (Widgets.ButtonImage(rectMinus.ContractedBy(4f), TexButton.Minus))
-                {
-                    WantsAndQuirksUtility.AddCharacterPoints(null, -100);
-                }
-                if (Mouse.IsOver(rectMinus))
-                {
-                    TooltipHandler.TipRegion(rectMinus, "- 100");
-                }
+                Text.Font = GameFont.Medium;
+                Text.Anchor = TextAnchor.UpperCenter;
+                Widgets.Label(new Rect(innerRect.x, curY - 5, innerRect.width, 30f), "WQ_CharacterPoints".Translate());
+                curY += 30f;
+
+                var barRect = new Rect(innerRect.x, curY, innerRect.width, 24f);
+                DrawCharacterPointsTracker(barRect, State.characterPoints, WantsAndQuirksUtility.GetGlobalCharacterPointsNeeded(), null);
+                curY += 30f;
+
+                Text.Font = GameFont.Tiny;
+                Text.Anchor = TextAnchor.UpperLeft;
+                Widgets.Label(new Rect(innerRect.x, curY, innerRect.width, 40f), "WQ_ProgressBarDesc".Translate());
+                curY += 40f;
             }
-
-            curY += 30f;
-
-            Text.Font = GameFont.Tiny;
-            Text.Anchor = TextAnchor.UpperLeft;
-            Widgets.Label(new Rect(innerRect.x, curY, innerRect.width, 40f), "WQ_ProgressBarDesc".Translate());
-            curY += 40f;
 
             Text.Font = GameFont.Small;
             Widgets.Label(new Rect(innerRect.x, curY, innerRect.width, 24f), "WQ_CharactersWithWants".Translate());
@@ -321,7 +289,12 @@ namespace WantsAndQuirks
                 for (int j = 0; j < pawns.Count; j++)
                 {
                     var p = pawns[j];
-                    if (p.CanHaveWants() && p.GetWantsData().activeWants.Count > 0)
+                    if (!p.CanHaveWants())
+                        continue;
+                    var pawnData = p.GetWantsData();
+                    bool hasWants = pawnData.activeWants.Count > 0;
+                    bool hasPoints = WantsAndQuirksMod.settings.pawnSpecificRewardPoints && pawnData.rewardPoints > 0;
+                    if (hasWants || hasPoints)
                     {
                         tempPawns.Add(p);
                     }
@@ -357,7 +330,18 @@ namespace WantsAndQuirks
                 Widgets.Label(new Rect(rowRect.x + 40f, rowRect.y, 150f, 35f), p.LabelShort);
 
                 Text.Anchor = TextAnchor.MiddleRight;
-                Widgets.Label(new Rect(rowRect.xMax - 100f, rowRect.y, 90f, 35f), "WQ_WantsCount".Translate(p.GetWantsData().activeWants.Count));
+                if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+                {
+                    var pData = p.GetWantsData();
+                    Text.Font = GameFont.Tiny;
+                    Widgets.Label(new Rect(rowRect.xMax - 130f, rowRect.y, 120f, 18f), "WQ_WantsCount".Translate(pData.activeWants.Count));
+                    Widgets.Label(new Rect(rowRect.xMax - 130f, rowRect.y + 17f, 120f, 18f), "WQ_PawnRewardPoints".Translate(pData.rewardPoints));
+                    Text.Font = GameFont.Small;
+                }
+                else
+                {
+                    Widgets.Label(new Rect(rowRect.xMax - 100f, rowRect.y, 90f, 35f), "WQ_WantsCount".Translate(p.GetWantsData().activeWants.Count));
+                }
                 Text.Anchor = TextAnchor.UpperLeft;
 
                 pY += 38f;
@@ -369,11 +353,14 @@ namespace WantsAndQuirks
         {
             Widgets.DrawBoxSolid(rect, CenterBgColor);
             var curY = rect.y;
-            Text.Font = GameFont.Small;
-            Text.Anchor = TextAnchor.UpperCenter;
-            Widgets.Label(new Rect(rect.x, curY, rect.width, 24f), "WQ_AvailableRewards".Translate(State.rewardPoints));
-            curY += 24f;
-            Text.Anchor = TextAnchor.UpperLeft;
+            if (!WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+            {
+                Text.Font = GameFont.Small;
+                Text.Anchor = TextAnchor.UpperCenter;
+                Widgets.Label(new Rect(rect.x, curY, rect.width, 24f), "WQ_AvailableRewards".Translate(State.rewardPoints));
+                curY += 24f;
+                Text.Anchor = TextAnchor.UpperLeft;
+            }
 
             var physicsRect = new Rect(rect.x, curY, rect.width, rect.height - 50f - (curY - rect.y));
             var center = new Vector2(physicsRect.width / 2f, physicsRect.height / 2f);
@@ -511,14 +498,28 @@ namespace WantsAndQuirks
 
         private void ClaimReward(RewardNode node)
         {
-            if (State.rewardPoints <= 0)
-            {
-                Messages.Message("WQ_NotEnoughRewardPoints".Translate(), MessageTypeDefOf.RejectInput, false);
-                return;
-            }
-
-            var recipients = PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction
+            var allCandidates = PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction
                 .Where(p => p.CanHaveWants() && node.def.Worker.CanBestowOn(p, node.item, node.pawnTarget)).ToList();
+
+            List<Pawn> recipients;
+            if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+            {
+                recipients = allCandidates.Where(p => p.GetWantsData().rewardPoints > 0).ToList();
+                if (recipients.Count == 0 && allCandidates.Count > 0)
+                {
+                    Messages.Message("WQ_NoPawnRewardPoints".Translate(), MessageTypeDefOf.RejectInput, false);
+                    return;
+                }
+            }
+            else
+            {
+                if (State.rewardPoints <= 0)
+                {
+                    Messages.Message("WQ_NotEnoughRewardPoints".Translate(), MessageTypeDefOf.RejectInput, false);
+                    return;
+                }
+                recipients = allCandidates;
+            }
 
             if (recipients.Count == 0)
             {
@@ -527,6 +528,44 @@ namespace WantsAndQuirks
             }
             DefsOf.WQ_BubbleClick.PlayOneShotOnCamera();
             Find.WindowStack.Add(new Dialog_BestowReward(node, this, recipients));
+        }
+        public static void DrawCharacterPointsTracker(Rect barRect, int points, int needed, Pawn pawn)
+        {
+            var fill = Mathf.Clamp01((float)points / needed);
+
+            Widgets.DrawBoxSolid(barRect, ProgressBarBgColor);
+            Widgets.DrawBoxSolid(new Rect(barRect.x, barRect.y, barRect.width * fill, barRect.height), ProgressBarFillColor);
+
+            Text.Font = GameFont.Small;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(new Rect(barRect.x + 5f, barRect.y, 100f, 24f), "0");
+            Text.Anchor = TextAnchor.MiddleRight;
+            Widgets.Label(new Rect(barRect.xMax - 105f, barRect.y, 100f, 24f), needed.ToString());
+            Text.Anchor = TextAnchor.MiddleCenter;
+            Widgets.Label(barRect, points.ToString());
+
+            if (Prefs.DevMode && DebugSettings.godMode)
+            {
+                var lineHeight = Text.LineHeight;
+                var rectPlus = new Rect(barRect.xMax - lineHeight, barRect.y - lineHeight, lineHeight, lineHeight);
+                if (Widgets.ButtonImage(rectPlus.ContractedBy(4f), TexButton.Plus))
+                {
+                    WantsAndQuirksUtility.AddCharacterPoints(pawn, 100);
+                }
+                if (Mouse.IsOver(rectPlus))
+                {
+                    TooltipHandler.TipRegion(rectPlus, "+ 100");
+                }
+                var rectMinus = new Rect(rectPlus.xMin - lineHeight, barRect.y - lineHeight, lineHeight, lineHeight);
+                if (Widgets.ButtonImage(rectMinus.ContractedBy(4f), TexButton.Minus))
+                {
+                    WantsAndQuirksUtility.AddCharacterPoints(pawn, -100);
+                }
+                if (Mouse.IsOver(rectMinus))
+                {
+                    TooltipHandler.TipRegion(rectMinus, "- 100");
+                }
+            }
         }
     }
 }

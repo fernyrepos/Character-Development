@@ -6,6 +6,7 @@ namespace WantsAndQuirks
     public static class State
     {
         public static int characterPoints;
+        public static int currentCharacterPointsNeeded;
         public static int rewardPoints;
         public static List<RewardNode> rewardNodes = new List<RewardNode>();
         public static int quirkLoadIDCounter;
@@ -13,6 +14,7 @@ namespace WantsAndQuirks
         public static void ExposeData()
         {
             Scribe_Values.Look(ref characterPoints, "WQ_characterPoints", 0);
+            Scribe_Values.Look(ref currentCharacterPointsNeeded, "WQ_currentCharacterPointsNeeded", 0);
             Scribe_Values.Look(ref rewardPoints, "WQ_rewardPoints", 0);
             Scribe_Collections.Look(ref rewardNodes, "WQ_rewardNodes", LookMode.Deep);
             Scribe_Values.Look(ref quirkLoadIDCounter, "WQ_quirkLoadIDCounter", 0);
@@ -31,6 +33,7 @@ namespace WantsAndQuirks
         public static void Reset()
         {
             characterPoints = 0;
+            currentCharacterPointsNeeded = 0;
             rewardPoints = 0;
             rewardNodes = new List<RewardNode>();
             quirkLoadIDCounter = 0;
