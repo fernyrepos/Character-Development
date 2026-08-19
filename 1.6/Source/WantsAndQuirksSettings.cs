@@ -36,7 +36,7 @@ namespace WantsAndQuirks
             Scribe_Values.Look(ref startingWantsCount, "startingWantsCount", 0);
             Scribe_Values.Look(ref maxActiveWants, "maxActiveWants", 4);
             Scribe_Values.Look(ref wantGenerationFrequencyDays, "wantGenerationFrequencyDays", new IntRange(1, 8));
-            Scribe_Values.Look(ref pawnSpecificRewardPoints, "pawnSpecificRewardPoints", false);
+            Scribe_Values.Look(ref pawnSpecificRewardPoints, "pawnSpecificRewardPoints", true);
         }
 
         public void DoSettingsWindowContents(Rect inRect)
@@ -46,6 +46,7 @@ namespace WantsAndQuirks
             ls.CheckboxLabeled("WQ_EnableWantsSystem".Translate(), ref enableWantsSystem);
             ls.CheckboxLabeled("WQ_EnableCharactersMenu".Translate(), ref enableCharactersMenu);
             ls.CheckboxLabeled("WQ_EnableMentalBreakWants".Translate(), ref enableMentalBreakWants);
+            ls.CheckboxLabeled("WQ_PawnSpecificRewardPoints".Translate(), ref pawnSpecificRewardPoints);
             ls.CheckboxLabeled("WQ_DisableTechLevelRestrictions".Translate(), ref disableTechLevelRestrictions);
             ls.Label("WQ_BubblesPerRoll".Translate(bubblesPerRoll));
             bubblesPerRoll = (int)ls.Slider(bubblesPerRoll, 1, 50);
@@ -62,7 +63,6 @@ namespace WantsAndQuirks
             maxActiveWants = (int)ls.Slider(maxActiveWants, 1, 10);
             ls.Label("WQ_WantGenerationFrequency".Translate(wantGenerationFrequencyDays.min, wantGenerationFrequencyDays.max));
             ls.IntRange(ref wantGenerationFrequencyDays, 1, 60);
-            ls.CheckboxLabeled("WQ_PawnSpecificRewardPoints".Translate(), ref pawnSpecificRewardPoints);
             ls.End();
         }
     }
