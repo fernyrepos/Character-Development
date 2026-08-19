@@ -13,6 +13,11 @@ namespace WantsAndQuirks
         public List<TraitRequirement> requiredTraits;
         public bool requiredTraitsAny;
         public List<GeneDef> invalidGenes;
+        public List<GeneDef> requiredGenes;
+        public bool requiredGenesAny;
+        public List<HediffDef> invalidHediffs;
+        public List<HediffDef> requiredHediffs;
+        public bool requiredHediffsAny;
         public bool invalidNonViolent;
         public TechLevel minimumTechLevel = TechLevel.Undefined;
         public TechLevel maximumTechLevel = TechLevel.Undefined;
@@ -72,6 +77,30 @@ namespace WantsAndQuirks
                             return false;
                 }
             }
+            if (invalidHediffs != null)
+            {
+                for (int i = 0; i < invalidHediffs.Count; i++)
+                    if (pawn.health.hediffSet.HasHediff(invalidHediffs[i]))
+                        return false;
+            }
+            if (requiredHediffs != null && requiredHediffs.Count > 0)
+            {
+                if (requiredHediffsAny)
+                {
+                    var any = false;
+                    for (int i = 0; i < requiredHediffs.Count; i++)
+                        if (pawn.health.hediffSet.HasHediff(requiredHediffs[i]))
+                        { any = true; break; }
+                    if (!any)
+                        return false;
+                }
+                else
+                {
+                    for (int i = 0; i < requiredHediffs.Count; i++)
+                        if (!pawn.health.hediffSet.HasHediff(requiredHediffs[i]))
+                            return false;
+                }
+            }
             if (ModsConfig.BiotechActive && pawn.genes != null)
             {
                 if (invalidGenes != null)
@@ -79,6 +108,24 @@ namespace WantsAndQuirks
                     for (int i = 0; i < invalidGenes.Count; i++)
                         if (pawn.genes.HasActiveGene(invalidGenes[i]))
                             return false;
+                }
+                if (requiredGenes != null && requiredGenes.Count > 0)
+                {
+                    if (requiredGenesAny)
+                    {
+                        var any = false;
+                        for (int i = 0; i < requiredGenes.Count; i++)
+                            if (pawn.genes.HasActiveGene(requiredGenes[i]))
+                            { any = true; break; }
+                        if (!any)
+                            return false;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < requiredGenes.Count; i++)
+                            if (!pawn.genes.HasActiveGene(requiredGenes[i]))
+                                return false;
+                    }
                 }
                 if (invalidXenotypes != null && invalidXenotypes.Contains(pawn.genes.Xenotype))
                     return false;
