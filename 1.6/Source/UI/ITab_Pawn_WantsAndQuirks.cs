@@ -40,8 +40,15 @@ namespace WantsAndQuirks
         public override void FillTab()
         {
             var pawn = SelPawn;
-            size = new Vector2(600f, 413f);
             var data = pawn.GetWantsData();
+            if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+            {
+                size = new Vector2(600f, 467f);
+            }
+            else
+            {
+                size = new Vector2(600f, 413f);
+            }
             var rect = new Rect(0f, 0f, size.x, size.y);
 
             Widgets.DrawBoxSolid(rect, BgColor);
