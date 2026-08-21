@@ -54,6 +54,7 @@ namespace WantsAndQuirks
 
     public static class WantsAndQuirksUtility
     {
+        private static readonly List<Thought> tmpThoughts = new List<Thought>();
         private static readonly ConditionalWeakTable<Pawn, PawnWantsData> pawnData = new ConditionalWeakTable<Pawn, PawnWantsData>();
         public static readonly ConditionalWeakTable<Message, Pawn> wantMessages = new ConditionalWeakTable<Message, Pawn>();
         public static PawnWantsData GetWantsData(this Pawn pawn)
@@ -511,6 +512,34 @@ namespace WantsAndQuirks
                         return true;
                 }
             }
+            return false;
+        }
+
+        public static bool HasThought(Pawn pawn, ThoughtDef thought)
+        {
+            if (pawn.needs?.mood?.thoughts == null)
+                return false;
+
+            if (thought.IsMemory)
+            {
+                return pawn.needs.mood.thoughts.memories?.GetFirstMemoryOfDef(thought) != null;
+            }
+
+            if (thought.IsSocial)
+            {
+                return false; // unsupported
+            }
+
+            if (thought.IsSituational)
+            {
+                if (pawn.needs.mood.thoughts.situational == null)
+                    return false;
+
+                tmpThoughts.Clear();
+                pawn.needs.mood.thoughts.situational.AppendMoodThoughts(tmpThoughts);
+                return tmpThoughts.Any(t => t.def == thought);
+            }
+
             return false;
         }
     }

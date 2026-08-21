@@ -8,7 +8,7 @@ namespace WantsAndQuirks
     {
         public override bool IsSatisfied(Pawn pawn)
         {
-            return pawn.needs?.mood?.thoughts?.memories?.GetFirstMemoryOfDef(def.completedByThought) != null;
+            return WantsAndQuirksUtility.HasThought(pawn, def.completedByThought);
         }
     }
 
@@ -246,11 +246,11 @@ namespace WantsAndQuirks
     {
         public override bool IsSatisfied(Pawn pawn)
         {
-            if (def.targetThoughts.NullOrEmpty() || pawn.needs?.mood?.thoughts?.memories == null)
+            if (def.targetThoughts.NullOrEmpty() || pawn.needs?.mood?.thoughts == null)
                 return false;
             foreach (var t in def.targetThoughts)
             {
-                if (pawn.needs.mood.thoughts.memories.GetFirstMemoryOfDef(t) != null)
+                if (WantsAndQuirksUtility.HasThought(pawn, def.completedByThought))
                     return true;
             }
             return false;
