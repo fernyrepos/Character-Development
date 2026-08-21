@@ -482,8 +482,7 @@
         <iconPath>UI/WantIcons/Imprisoned</iconPath>
         <reward>1500</reward>
         <commonality>0.5</commonality>
-        <workerClass>WantsAndQuirks.WantWorker_Thought</workerClass>
-        <completedByThought>HoldingMePrisoner</completedByThought>
+        <workerClass>WantsAndQuirks.WantWorker_Imprisoned</workerClass>
         <minimumTechLevel>Neolithic</minimumTechLevel>
         <isMentalBreakWant>true</isMentalBreakWant>
     </WantsAndQuirks.WantDef>

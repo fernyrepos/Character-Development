@@ -874,4 +874,12 @@ namespace WantsAndQuirks
             return bed != null && bed.SleepingSlotsCount >= 2;
         }
     }
+
+    public class WantWorker_Imprisoned : WantWorker
+    {
+        public override bool IsSatisfied(Pawn pawn)
+        {
+            return pawn.IsPrisoner;
+        }
+    }
 }
