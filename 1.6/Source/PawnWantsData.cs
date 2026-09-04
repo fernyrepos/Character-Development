@@ -10,6 +10,10 @@ namespace WantsAndQuirks
         public WantDef def;
         public int assignedTick;
         public int rerollCount;
+        [Unsaved(false)]
+        public bool hasBeenViewed;
+        [Unsaved(false)]
+        public float glowStartRealTime = -1f;
 
         public virtual string LabelCap => def.LabelCap;
         public virtual string Description => def.description;

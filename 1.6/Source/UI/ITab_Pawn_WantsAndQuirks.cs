@@ -21,6 +21,8 @@ namespace WantsAndQuirks
         private static Color MentalBreakTextColor = new ColorInt(184, 133, 134).ToColor;
         private static Color ProgressBarTrackColor = new Color(1f, 1f, 1f, 0.08f);
         private static Color ProgressBarFillColor = new ColorInt(126, 206, 214).ToColor;
+        private static Color NewWantGlowColor = new Color(1f, 0.85f, 0.35f, 1f);
+        private const float NewWantGlowDuration = 2.5f;
 
         public ITab_Pawn_WantsAndQuirks()
         {
@@ -121,6 +123,24 @@ namespace WantsAndQuirks
             {
                 var want = data.activeWants[i];
                 var wantRect = new Rect(0f, listY, viewRect.width, 80f);
+
+                if (!want.hasBeenViewed)
+                {
+                    want.hasBeenViewed = true;
+                    want.glowStartRealTime = Time.realtimeSinceStartup;
+                }
+
+                if (want.glowStartRealTime >= 0f)
+                {
+                    var glowAge = Time.realtimeSinceStartup - want.glowStartRealTime;
+                    if (glowAge < NewWantGlowDuration)
+                    {
+                        var glowT = glowAge / NewWantGlowDuration;
+                        var glowRect = wantRect.ExpandedBy(4f);
+                        var glowColor = new Color(NewWantGlowColor.r, NewWantGlowColor.g, NewWantGlowColor.b, (1f - glowT) * 0.85f);
+                        Widgets.DrawBoxSolid(glowRect, glowColor);
+                    }
+                }
 
                 Widgets.DrawBoxSolid(wantRect, want.def.isMentalBreakWant ? MentalBreakRectColor : WantBgColor);
 
