@@ -28,7 +28,7 @@ namespace WantsAndQuirks
         public int startingWantsCount = 0;
         public int maxActiveWants = 4;
         public IntRange wantGenerationFrequencyDays = new IntRange(1, 8);
-        public bool pawnSpecificRewardPoints = false;
+        public bool pawnSpecificRewardPoints = true;
         public HashSet<string> disabledWantDefNames = new HashSet<string>();
         public Dictionary<string, float> wantCommonalityModifiers = new Dictionary<string, float>();
 
