@@ -219,9 +219,17 @@ namespace WantsAndQuirks
                 activeWants ??= new List<ActiveWant>();
                 quirks ??= new List<Quirk>();
                 grantedGenes ??= new List<GrantedGeneLink>();
-                activeWants.RemoveAll(w => w.def == null || (w is ActiveWantWithTarget t && t.targetDef == null) || (w is ActiveWantWithPawnTarget tp && tp.targetPawn == null));
-                quirks.RemoveAll(q => q.def == null || (q.def.requiresItem && q.item == null) || (q.def.requiresPawn && q.pawnTarget == null));
-                grantedGenes.RemoveAll(link => link.gene == null || link.quirk == null || !link.gene.IsGrantedGene());
+                // List elements can be null, not just their contents. Scribe_Collections.Look with
+                // LookMode.Deep loads each element via ScribeExtractor.SaveableFromNode, which logs
+                // and returns default(T) when loading one element throws - an unresolvable
+                // targetPawn reference, a WantDef that no longer exists, a renamed subclass. That
+                // null then sits in the list as an ordinary member.
+                //
+                // Without the null checks below, these predicates throw on it instead of removing
+                // it, RemoveAll aborts, and the null is kept and written back on the next save.
+                activeWants.RemoveAll(w => w == null || w.def == null || (w is ActiveWantWithTarget t && t.targetDef == null) || (w is ActiveWantWithPawnTarget tp && tp.targetPawn == null));
+                quirks.RemoveAll(q => q == null || q.def == null || (q.def.requiresItem && q.item == null) || (q.def.requiresPawn && q.pawnTarget == null));
+                grantedGenes.RemoveAll(link => link == null || link.gene == null || link.quirk == null || !link.gene.IsGrantedGene());
             }
         }
 
