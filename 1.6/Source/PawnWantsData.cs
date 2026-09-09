@@ -72,15 +72,28 @@ namespace WantsAndQuirks
             base.ExposeData();
             if (Scribe.mode == LoadSaveMode.Saving)
             {
-                targetDefName = targetDef.defName;
-                targetDefTypeName = targetDef.GetType().Name;
+                // targetDef can be null if the want outlived its target (a def from a mod that
+                // was removed, for instance). Writing a null name produces a save that cannot
+                // be loaded back - see the load branch below - so leave the names null and let
+                // the cleanup in PawnWantsData.ExposeData drop the want instead.
+                targetDefName = targetDef?.defName;
+                targetDefTypeName = targetDef?.GetType().Name;
             }
             Scribe_Values.Look(ref targetDefName, "targetDef");
             Scribe_Values.Look(ref targetDefTypeName, "targetDefType");
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
-                var type = GenTypes.GetTypeInAnyAssembly(targetDefTypeName);
-                targetDef = GenDefDatabase.GetDefSilentFail(type, targetDefName);
+                // GetDefSilentFail is silent about a def that does not exist, but throws
+                // ArgumentNullException on a null name, and GetTypeInAnyAssembly returns null
+                // for a null type name. An exception here makes ScribeExtractor.SaveableFromNode
+                // substitute null for this whole element, which then has to be cleaned up by
+                // PawnWantsData.ExposeData.
+                var type = targetDefTypeName.NullOrEmpty()
+                    ? null
+                    : GenTypes.GetTypeInAnyAssembly(targetDefTypeName);
+                targetDef = (type == null || targetDefName.NullOrEmpty())
+                    ? null
+                    : GenDefDatabase.GetDefSilentFail(type, targetDefName);
             }
         }
 
