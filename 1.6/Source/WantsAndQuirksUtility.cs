@@ -31,7 +31,8 @@ namespace WantsAndQuirks
         AdvancedEra,
         BoardedVehicle,
         AnimalTamed,
-        BuildingConstructed
+        BuildingConstructed,
+        GaveBirth
     }
 
     public struct WantWorkerContext

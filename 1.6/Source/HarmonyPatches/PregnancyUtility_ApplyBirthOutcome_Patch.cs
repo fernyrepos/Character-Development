@@ -19,11 +19,32 @@ namespace WantsAndQuirks
         public static void Postfix(Thing __result, Pawn geneticMother, Pawn father)
         {
             var pawn = __result as Pawn ?? (__result as Corpse)?.InnerPawn;
-            if (pawn?.genes == null)
+            if (pawn == null)
                 return;
 
             var parents = new List<Pawn> { geneticMother, father }.Where(x => x != null).ToList();
             if (parents.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var parent in parents)
+            {
+                if (parent.CanHaveWants())
+                {
+                    WantsAndQuirksUtility.CheckWants(parent, new WantWorkerContext(WantTriggerType.GaveBirth, contextPawn: pawn));
+                }
+
+                foreach (var grandparent in GetParents(parent))
+                {
+                    if (grandparent.CanHaveWants())
+                    {
+                        WantsAndQuirksUtility.CheckWants(grandparent, new WantWorkerContext(WantTriggerType.GaveBirth, contextPawn: parent));
+                    }
+                }
+            }
+
+            if (pawn.genes == null)
             {
                 return;
             }
@@ -45,6 +66,18 @@ namespace WantsAndQuirks
                 data.quirks.Add(quirk);
                 data.grantedGenes.Add(new GrantedGeneLink(gene, quirk));
                 grantedCount++;
+            }
+        }
+
+        private static IEnumerable<Pawn> GetParents(Pawn pawn)
+        {
+            if (pawn.relations == null)
+                yield break;
+
+            foreach (var rel in pawn.relations.DirectRelations)
+            {
+                if (rel.def == PawnRelationDefOf.Parent && rel.otherPawn != null)
+                    yield return rel.otherPawn;
             }
         }
 

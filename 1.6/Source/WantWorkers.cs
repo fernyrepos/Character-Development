@@ -170,6 +170,11 @@ namespace WantsAndQuirks
         {
             return pawn.relations.ChildrenCount > 0;
         }
+
+        public override bool IsCompleted(Pawn pawn, WantWorkerContext context)
+        {
+            return context.triggerType == WantTriggerType.GaveBirth;
+        }
     }
 
     public class WantWorker_Propose : WantWorker
@@ -366,6 +371,13 @@ namespace WantsAndQuirks
                     return true;
             }
             return false;
+        }
+
+        public override bool IsCompleted(Pawn pawn, WantWorkerContext context)
+        {
+            if (context.triggerType != WantTriggerType.GaveBirth || context.contextPawn == null)
+                return false;
+            return pawn.relations != null && pawn.relations.Children.Contains(context.contextPawn);
         }
     }
 
