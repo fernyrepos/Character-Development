@@ -72,15 +72,28 @@ namespace WantsAndQuirks
             base.ExposeData();
             if (Scribe.mode == LoadSaveMode.Saving)
             {
-                targetDefName = targetDef.defName;
-                targetDefTypeName = targetDef.GetType().Name;
+                // targetDef can be null if the want outlived its target (a def from a mod that
+                // was removed, for instance). Writing a null name produces a save that cannot
+                // be loaded back - see the load branch below - so leave the names null and let
+                // the cleanup in PawnWantsData.ExposeData drop the want instead.
+                targetDefName = targetDef?.defName;
+                targetDefTypeName = targetDef?.GetType().Name;
             }
             Scribe_Values.Look(ref targetDefName, "targetDef");
             Scribe_Values.Look(ref targetDefTypeName, "targetDefType");
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
-                var type = GenTypes.GetTypeInAnyAssembly(targetDefTypeName);
-                targetDef = GenDefDatabase.GetDefSilentFail(type, targetDefName);
+                // GetDefSilentFail is silent about a def that does not exist, but throws
+                // ArgumentNullException on a null name, and GetTypeInAnyAssembly returns null
+                // for a null type name. An exception here makes ScribeExtractor.SaveableFromNode
+                // substitute null for this whole element, which then has to be cleaned up by
+                // PawnWantsData.ExposeData.
+                var type = targetDefTypeName.NullOrEmpty()
+                    ? null
+                    : GenTypes.GetTypeInAnyAssembly(targetDefTypeName);
+                targetDef = (type == null || targetDefName.NullOrEmpty())
+                    ? null
+                    : GenDefDatabase.GetDefSilentFail(type, targetDefName);
             }
         }
 
@@ -219,9 +232,17 @@ namespace WantsAndQuirks
                 activeWants ??= new List<ActiveWant>();
                 quirks ??= new List<Quirk>();
                 grantedGenes ??= new List<GrantedGeneLink>();
-                activeWants.RemoveAll(w => w.def == null || (w is ActiveWantWithTarget t && t.targetDef == null) || (w is ActiveWantWithPawnTarget tp && tp.targetPawn == null));
-                quirks.RemoveAll(q => q.def == null || (q.def.requiresItem && q.item == null) || (q.def.requiresPawn && q.pawnTarget == null));
-                grantedGenes.RemoveAll(link => link.gene == null || link.quirk == null || !link.gene.IsGrantedGene());
+                // List elements can be null, not just their contents. Scribe_Collections.Look with
+                // LookMode.Deep loads each element via ScribeExtractor.SaveableFromNode, which logs
+                // and returns default(T) when loading one element throws - an unresolvable
+                // targetPawn reference, a WantDef that no longer exists, a renamed subclass. That
+                // null then sits in the list as an ordinary member.
+                //
+                // Without the null checks below, these predicates throw on it instead of removing
+                // it, RemoveAll aborts, and the null is kept and written back on the next save.
+                activeWants.RemoveAll(w => w == null || w.def == null || (w is ActiveWantWithTarget t && t.targetDef == null) || (w is ActiveWantWithPawnTarget tp && tp.targetPawn == null));
+                quirks.RemoveAll(q => q == null || q.def == null || (q.def.requiresItem && q.item == null) || (q.def.requiresPawn && q.pawnTarget == null));
+                grantedGenes.RemoveAll(link => link == null || link.gene == null || link.quirk == null || !link.gene.IsGrantedGene());
             }
         }
 

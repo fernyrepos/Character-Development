@@ -92,6 +92,13 @@ namespace WantsAndQuirks
             for (int i = data.activeWants.Count - 1; i >= 0; i--)
             {
                 var want = data.activeWants[i];
+                // Reached from Pawn.TickRare, so a null element here throws repeatedly rather
+                // than once. See the note in PawnWantsData.ExposeData for how nulls get in.
+                if (want?.def == null)
+                {
+                    data.activeWants.RemoveAt(i);
+                    continue;
+                }
                 if (want.IsCompleted(pawn, context))
                 {
                     CompleteWant(pawn, data, want);
