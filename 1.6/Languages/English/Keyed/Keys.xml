@@ -54,5 +54,6 @@
   <WQ_SettingsTabGeneral>General</WQ_SettingsTabGeneral>
   <WQ_SettingsTabWants>Wants</WQ_SettingsTabWants>
   <WQ_SettingsTabTraumaticWants>Traumatic Wants</WQ_SettingsTabTraumaticWants>
+  <WQ_SettingsTabModifiers>Modifiers</WQ_SettingsTabModifiers>
   <WQ_CommonalityModifier>Commonality modifier: {0}%</WQ_CommonalityModifier>
 </LanguageData>

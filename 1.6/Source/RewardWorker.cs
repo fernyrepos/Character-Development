@@ -22,6 +22,8 @@ namespace WantsAndQuirks
 
         public virtual bool CanGenerate()
         {
+            if (WantsAndQuirksMod.settings.disabledRewardDefNames.Contains(def.defName))
+                return false;
             return def.CanGenerate();
         }
 

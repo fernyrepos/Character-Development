@@ -9,7 +9,8 @@ namespace WantsAndQuirks
     {
         General,
         Wants,
-        TraumaticWants
+        TraumaticWants,
+        Modifiers
     }
 
     public class WantsAndQuirksSettings : ModSettings
@@ -31,14 +32,18 @@ namespace WantsAndQuirks
         public bool pawnSpecificRewardPoints = true;
         public HashSet<string> disabledWantDefNames = new HashSet<string>();
         public Dictionary<string, float> wantCommonalityModifiers = new Dictionary<string, float>();
+        public HashSet<string> disabledRewardDefNames = new HashSet<string>();
 
         private List<WantDef> normalWantDefsCache;
         private List<WantDef> traumaticWantDefsCache;
+        private List<RewardDef> rewardDefsCache;
         private WantSettingsTab currentTab = WantSettingsTab.General;
         private Vector2 wantsScrollPosition;
         private Vector2 traumaticWantsScrollPosition;
+        private Vector2 rewardsScrollPosition;
         private float wantsViewHeight = 1000f;
         private float traumaticWantsViewHeight = 1000f;
+        private float rewardsViewHeight = 1000f;
 
         public override void ExposeData()
         {
@@ -60,6 +65,8 @@ namespace WantsAndQuirks
             disabledWantDefNames ??= new HashSet<string>();
             Scribe_Collections.Look(ref wantCommonalityModifiers, "wantCommonalityModifiers", LookMode.Value, LookMode.Value);
             wantCommonalityModifiers ??= new Dictionary<string, float>();
+            Scribe_Collections.Look(ref disabledRewardDefNames, "disabledRewardDefNames", LookMode.Value);
+            disabledRewardDefNames ??= new HashSet<string>();
         }
 
         public float GetCommonalityModifierPercent(WantDef def)
@@ -77,6 +84,8 @@ namespace WantsAndQuirks
             if (normalWantDefsCache != null)
                 return;
 
+            rewardDefsCache = DefDatabase<RewardDef>.AllDefsListForReading.OrderBy(d => d.rarity).ThenBy(d => d.label).ToList();
+
             var allWants = DefDatabase<WantDef>.AllDefsListForReading;
             normalWantDefsCache = allWants.Where(d => !d.isMentalBreakWant).OrderBy(d => d.label).ToList();
             traumaticWantDefsCache = allWants.Where(d => d.isMentalBreakWant).OrderBy(d => d.label).ToList();
@@ -93,7 +102,8 @@ namespace WantsAndQuirks
             {
                 new TabRecord("WQ_SettingsTabGeneral".Translate(), () => currentTab = WantSettingsTab.General, currentTab == WantSettingsTab.General),
                 new TabRecord("WQ_SettingsTabWants".Translate(), () => currentTab = WantSettingsTab.Wants, currentTab == WantSettingsTab.Wants),
-                new TabRecord("WQ_SettingsTabTraumaticWants".Translate(), () => currentTab = WantSettingsTab.TraumaticWants, currentTab == WantSettingsTab.TraumaticWants)
+                new TabRecord("WQ_SettingsTabTraumaticWants".Translate(), () => currentTab = WantSettingsTab.TraumaticWants, currentTab == WantSettingsTab.TraumaticWants),
+                new TabRecord("WQ_SettingsTabModifiers".Translate(), () => currentTab = WantSettingsTab.Modifiers, currentTab == WantSettingsTab.Modifiers)
             };
             TabDrawer.DrawTabs(contentRect, tabs);
 
@@ -104,6 +114,9 @@ namespace WantsAndQuirks
                     break;
                 case WantSettingsTab.TraumaticWants:
                     DrawWantDefListTab(contentRect, traumaticWantDefsCache, ref traumaticWantsScrollPosition, ref traumaticWantsViewHeight);
+                    break;
+                case WantSettingsTab.Modifiers:
+                    DrawRewardDefListTab(contentRect);
                     break;
                 default:
                     DrawGeneralTab(contentRect);
@@ -221,6 +234,76 @@ namespace WantsAndQuirks
             }
             ls.End();
             viewHeight = ls.CurHeight;
+
+            Widgets.EndScrollView();
+        }
+
+        private static Texture GetDisplayIcon(RewardDef def)
+        {
+            if (def.iconPath.NullOrEmpty() && (def.gene == null || def.gene.iconPath.NullOrEmpty()))
+                return null;
+            return def.Icon;
+        }
+
+        private void DrawRewardDefListTab(Rect rect)
+        {
+            var viewRect = new Rect(0f, 0f, rect.width - 16f, rewardsViewHeight);
+            Widgets.BeginScrollView(rect, ref rewardsScrollPosition, viewRect);
+
+            var ls = new Listing_Standard();
+            ls.Begin(viewRect);
+            ls.maxOneColumn = true;
+
+            const float iconSize = 48f;
+            const float checkboxHeight = 24f;
+            const float labelHeight = 20f;
+            const float innerGap = 4f;
+            const float blockHeight = checkboxHeight + innerGap + labelHeight;
+
+            for (int i = 0; i < rewardDefsCache.Count; i++)
+            {
+                var def = rewardDefsCache[i];
+                var enabled = !disabledRewardDefNames.Contains(def.defName);
+                var rowTint = enabled ? Color.white : new Color(1f, 1f, 1f, 0.4f);
+                var priorColor = GUI.color;
+
+                var rowRect = ls.GetRect(blockHeight);
+                var iconRect = new Rect(rowRect.x, rowRect.y, iconSize, rowRect.height);
+                var contentX = rowRect.x + iconSize + 8f;
+                var contentWidth = rowRect.width - iconSize - 8f;
+
+                var icon = GetDisplayIcon(def);
+                if (icon != null)
+                {
+                    var scale = Mathf.Min(1f, Mathf.Min(iconRect.width / icon.width, iconRect.height / icon.height));
+                    var drawWidth = icon.width * scale;
+                    var drawHeight = icon.height * scale;
+                    var iconDrawRect = new Rect(
+                        iconRect.x + (iconRect.width - drawWidth) / 2f,
+                        iconRect.y + (iconRect.height - drawHeight) / 2f,
+                        drawWidth, drawHeight);
+                    GUI.color = rowTint;
+                    GUI.DrawTexture(iconDrawRect, icon);
+                    GUI.color = priorColor;
+                }
+
+                var checkRect = new Rect(contentX, rowRect.y, contentWidth, checkboxHeight);
+                GUI.color = rowTint;
+                Widgets.CheckboxLabeled(checkRect, def.LabelCap, ref enabled);
+                if (enabled)
+                    disabledRewardDefNames.Remove(def.defName);
+                else
+                    disabledRewardDefNames.Add(def.defName);
+
+                var labelRect = new Rect(contentX, checkRect.yMax + innerGap, contentWidth, labelHeight);
+                GUI.color = new Color(rowTint.r * 0.7f, rowTint.g * 0.7f, rowTint.b * 0.7f, rowTint.a);
+                Widgets.Label(labelRect, def.rarity.ToString());
+                GUI.color = priorColor;
+
+                ls.GapLine();
+            }
+            ls.End();
+            rewardsViewHeight = ls.CurHeight;
 
             Widgets.EndScrollView();
         }
