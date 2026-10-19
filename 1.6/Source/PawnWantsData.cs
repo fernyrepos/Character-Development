@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -77,7 +78,7 @@ namespace WantsAndQuirks
                 // be loaded back - see the load branch below - so leave the names null and let
                 // the cleanup in PawnWantsData.ExposeData drop the want instead.
                 targetDefName = targetDef?.defName;
-                targetDefTypeName = targetDef?.GetType().Name;
+                targetDefTypeName = targetDef?.GetType().FullName;
             }
             Scribe_Values.Look(ref targetDefName, "targetDef");
             Scribe_Values.Look(ref targetDefTypeName, "targetDefType");
@@ -91,6 +92,15 @@ namespace WantsAndQuirks
                 var type = targetDefTypeName.NullOrEmpty()
                     ? null
                     : GenTypes.GetTypeInAnyAssembly(targetDefTypeName);
+                if (type == null && !targetDefTypeName.NullOrEmpty())
+                {
+                    // Legacy saves used short names; recover only an unambiguous Def subtype.
+                    var matches = GenTypes.AllTypes
+                        .Where(t => t.Name == targetDefTypeName && typeof(Def).IsAssignableFrom(t))
+                        .Take(2).ToArray();
+                    if (matches.Length == 1)
+                        type = matches[0];
+                }
                 targetDef = (type == null || targetDefName.NullOrEmpty())
                     ? null
                     : GenDefDatabase.GetDefSilentFail(type, targetDefName);
