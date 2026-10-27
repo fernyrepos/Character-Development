@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
@@ -319,9 +320,13 @@ namespace WantsAndQuirks
         public override bool IsSatisfied(Pawn pawn)
         {
             var count = 0;
-            var pawns = pawn.MapHeld?.mapPawns?.FreeColonistsSpawned;
-            if (pawns == null)
+            var colonists = pawn.MapHeld?.mapPawns?.FreeColonistsSpawned;
+            if (colonists == null)
                 return false;
+            // Copy before adding relatives: FreeColonistsSpawned can return a cached list (Vehicle
+            // Map Framework does), and adding to it makes every alert count the relatives as
+            // colonists, growing with each check.
+            var pawns = new List<Pawn>(colonists);
             pawns.AddRange(pawn.relations.RelatedPawns);
             pawns = pawns.Where(x => x.RaceProps.Humanlike).Distinct().ToList();
             for (int i = 0; i < pawns.Count; i++)
