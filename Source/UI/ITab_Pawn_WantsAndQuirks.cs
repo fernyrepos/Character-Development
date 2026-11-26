@@ -28,7 +28,7 @@ namespace WantsAndQuirks
         private const float NewWantGlowDuration = 2.5f;
         private const float MainWidth = 600f;
         private const float RewardsPanelWidth = 450f;
-        private const float WantRowHeight = 34f;
+        private const float WantRowHeight = 50f;
         private const float WantRowGap = 4f;
         private const float RowButtonSize = 22f;
 
@@ -190,11 +190,11 @@ namespace WantsAndQuirks
             var buttonsWidth = isMentalBreak ? 0f : RowButtonSize * 2f + 14f;
             var titleArea = new Rect(rowRect.x, rowRect.y, rowRect.width - buttonsWidth, rowRect.height);
 
-            var iconRect = new Rect(rowRect.x + 5f, rowRect.y + (rowRect.height - 26f) / 2f, 26f, 26f);
+            var iconRect = new Rect(rowRect.x + 6f, rowRect.y + (rowRect.height - 36f) / 2f, 36f, 36f);
             var tex = want.Icon;
             if (want is ActiveWantWithPawnTarget pt && pt.targetPawn != null)
             {
-                tex = PortraitsCache.Get(pt.targetPawn, new Vector2(26f, 26f), Rot4.South, cameraZoom: 1.2f);
+                tex = PortraitsCache.Get(pt.targetPawn, new Vector2(36f, 36f), Rot4.South, cameraZoom: 1.2f);
             }
             if (tex != null)
             {
@@ -205,12 +205,16 @@ namespace WantsAndQuirks
 
             Text.Font = GameFont.Small;
             Text.Anchor = TextAnchor.MiddleLeft;
-            var labelRect = new Rect(iconRect.xMax + 8f, rowRect.y, titleArea.xMax - iconRect.xMax - 12f, rowRect.height);
-            if (isMentalBreak)
-            {
-                GUI.color = MentalBreakTextColor;
-            }
-            Widgets.Label(labelRect, $"<i>{want.LabelCap.Truncate(labelRect.width)}</i>");
+            var textX = iconRect.xMax + 10f;
+            var textWidth = titleArea.xMax - textX - 4f;
+            var titleRect = new Rect(textX, rowRect.y + 3f, textWidth, 22f);
+            var rewardRect = new Rect(textX, titleRect.yMax, textWidth, 22f);
+            Widgets.Label(titleRect, $"<i>{want.LabelCap.Truncate(titleRect.width)}</i>");
+            string rewardLine = isMentalBreak
+                ? "WQ_CausedByMentalBreak".Translate()
+                : "WQ_OnCompletion".Translate() + " " + "WQ_CharacterPointsReward".Translate(want.def.reward);
+            GUI.color = isMentalBreak ? MentalBreakTextColor : PointsColor;
+            Widgets.Label(rewardRect, rewardLine.Truncate(rewardRect.width));
             GUI.color = Color.white;
             Text.Anchor = TextAnchor.UpperLeft;
 
@@ -254,14 +258,6 @@ namespace WantsAndQuirks
             if (hasProgress)
             {
                 tip += "\n\n" + "WQ_WantProgress".Translate(progCurrent.ToString("0.#"), progTarget.ToString("0.#"));
-            }
-            if (want.def.isMentalBreakWant)
-            {
-                tip += "\n\n" + "WQ_CausedByMentalBreak".Translate().Colorize(MentalBreakTextColor);
-            }
-            else
-            {
-                tip += "\n\n" + ("WQ_OnCompletion".Translate() + " " + "WQ_CharacterPointsReward".Translate(want.def.reward)).Colorize(PointsColor);
             }
             return tip;
         }
