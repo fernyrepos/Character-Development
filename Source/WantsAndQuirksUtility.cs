@@ -480,6 +480,13 @@ while (pawnData.characterPoints >= pawnNeeded)
             }
         }
 
+        public static Texture QuirkIcon(Quirk quirk, float size)
+        {
+            if (quirk.def.requiresPawn && quirk.pawnTarget != null)
+                return PortraitsCache.Get(quirk.pawnTarget, new Vector2(size, size), Rot4.South, cameraZoom: 1.2f);
+            return quirk.def.requiresItem && quirk.item?.uiIcon != null ? quirk.item.uiIcon : quirk.def.Icon;
+        }
+
         public static int RewardPointsToSpend(Pawn pawn)
         {
             return WantsAndQuirksMod.settings.pawnSpecificRewardPoints ? pawn.GetWantsData().rewardPoints : State.rewardPoints;

@@ -63,4 +63,5 @@
   <WQ_DismissWant>Dismiss want</WQ_DismissWant>
   <WQ_NoRerollsLeft>No rerolls left</WQ_NoRerollsLeft>
   <WQ_WantProgress>Progress: {0} / {1}</WQ_WantProgress>
+  <WQ_GivingRewardsTo>Giving rewards to {0}. Reward points: {1}</WQ_GivingRewardsTo>
 </LanguageData>
