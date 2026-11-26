@@ -12,6 +12,7 @@ namespace WantsAndQuirksUIRethemed
         static UIRethemedStartup()
         {
             CharacterDevelopmentLook.WantsTab = new WantsTabLook();
+            CharacterDevelopmentLook.CharactersMenu = new CharactersMenuLook();
             new Harmony("ferny.characterdevelopment.uirethemed").PatchAll(Assembly.GetExecutingAssembly());
         }
     }

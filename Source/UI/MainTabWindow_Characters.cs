@@ -27,11 +27,47 @@ namespace WantsAndQuirks
 
         private const float HelpWidth = 300f;
 
-        public override Vector2 RequestedTabSize => new Vector2(1460f, 560f);
+        public Pawn SelectedPawn
+        {
+            get => selectedPawn;
+            set => selectedPawn = value;
+        }
+
+        public RewardBubbleField Bubbles => bubbles;
+
+        // With another look the window has no frame of its own and no margin; the look draws them.
+        protected override float Margin => CharacterDevelopmentLook.ActiveCharactersMenu != null ? 0f : base.Margin;
+
+        public override Vector2 RequestedTabSize
+        {
+            get
+            {
+                var look = CharacterDevelopmentLook.ActiveCharactersMenu;
+                if (look != null)
+                {
+                    try
+                    {
+                        return look.Size(this);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        MenuLookFailed(ex);
+                    }
+                }
+                return new Vector2(1460f, 560f);
+            }
+        }
+
+        private void MenuLookFailed(System.Exception ex)
+        {
+            CharacterDevelopmentLook.CharactersMenuFailed(ex);
+            doWindowBackground = true;
+        }
 
         public override void PreOpen()
         {
             base.PreOpen();
+            doWindowBackground = CharacterDevelopmentLook.ActiveCharactersMenu == null;
             selectedPawn = null;
             RemoveWantsWithNullPawns();
             RewardBubbleField.PrepareNodes();
@@ -59,6 +95,23 @@ namespace WantsAndQuirks
 
         public override void DoWindowContents(Rect inRect)
         {
+            var look = CharacterDevelopmentLook.ActiveCharactersMenu;
+            if (look != null)
+            {
+                try
+                {
+                    look.Draw(this, inRect);
+                    return;
+                }
+                catch (System.Exception ex)
+                {
+                    MenuLookFailed(ex);
+                }
+            }
+            if (!doWindowBackground)
+            {
+                doWindowBackground = true;
+            }
             var leftRect = new Rect(inRect.x, inRect.y, ListWidth, inRect.height);
             var centerRect = new Rect(leftRect.xMax, inRect.y, inRect.width - ListWidth - HelpWidth, inRect.height);
             var rightRect = new Rect(centerRect.xMax, inRect.y, HelpWidth, inRect.height);
@@ -101,25 +154,7 @@ namespace WantsAndQuirks
             Widgets.Label(new Rect(innerRect.x, curY, innerRect.width, 24f), "WQ_CharactersWithWants".Translate());
             curY += 24f;
 
-            tempPawns.Clear();
-            var maps = Find.Maps;
-            for (int i = 0; i < maps.Count; i++)
-            {
-                var pawns = maps[i].mapPawns.SpawnedPawnsInFaction(Faction.OfPlayer);
-                for (int j = 0; j < pawns.Count; j++)
-                {
-                    var p = pawns[j];
-                    if (!p.CanHaveWants())
-                        continue;
-                    var pawnData = p.GetWantsData();
-                    bool hasWants = pawnData.activeWants.Count > 0;
-                    bool hasPoints = WantsAndQuirksMod.settings.pawnSpecificRewardPoints && pawnData.rewardPoints > 0;
-                    if (hasWants || hasPoints)
-                    {
-                        tempPawns.Add(p);
-                    }
-                }
-            }
+            CollectPawns(tempPawns);
             if (selectedPawn != null && !tempPawns.Contains(selectedPawn))
             {
                 selectedPawn = null;
@@ -142,6 +177,37 @@ namespace WantsAndQuirks
 
         // One line per pawn: portrait, name and title, wants, reward points and quirk icons, each with its details in a tooltip.
         // A click selects or deselects the pawn; a double click jumps to them and opens their wants tab.
+        // The pawns the menu lists: player pawns on maps that can have wants and have wants or reward points.
+        public static void CollectPawns(List<Pawn> into)
+        {
+            into.Clear();
+            var maps = Find.Maps;
+            for (int i = 0; i < maps.Count; i++)
+            {
+                var pawns = maps[i].mapPawns.SpawnedPawnsInFaction(Faction.OfPlayer);
+                for (int j = 0; j < pawns.Count; j++)
+                {
+                    var p = pawns[j];
+                    if (!p.CanHaveWants())
+                        continue;
+                    var pawnData = p.GetWantsData();
+                    bool hasWants = pawnData.activeWants.Count > 0;
+                    bool hasPoints = WantsAndQuirksMod.settings.pawnSpecificRewardPoints && pawnData.rewardPoints > 0;
+                    if (hasWants || hasPoints)
+                    {
+                        into.Add(p);
+                    }
+                }
+            }
+        }
+
+        // Jumps to the pawn, selects them and opens their wants tab.
+        public static void OpenWantsTab(Pawn p)
+        {
+            CameraJumper.TryJumpAndSelect(p);
+            InspectPaneUtility.OpenTab(typeof(ITab_Pawn_WantsAndQuirks));
+        }
+
         private void DrawPawnRow(Rect rowRect, Pawn p)
         {
             var pData = p.GetWantsData();
@@ -158,8 +224,7 @@ namespace WantsAndQuirks
                     if (Event.current.clickCount == 2)
                     {
                         selectedPawn = p;
-                        CameraJumper.TryJumpAndSelect(p);
-                        InspectPaneUtility.OpenTab(typeof(ITab_Pawn_WantsAndQuirks));
+                        OpenWantsTab(p);
                     }
                     else
                     {
@@ -270,7 +335,8 @@ namespace WantsAndQuirks
 
         private static string BlockedReason(Pawn pawn, RewardNode node) => WantsAndQuirksUtility.RewardBlockedReason(pawn, node);
 
-        private void ClaimReward(RewardNode node)
+        // With a pawn selected the reward goes straight to them; otherwise the Bestow reward dialog picks who gets it.
+        public void ClaimReward(RewardNode node)
         {
             if (selectedPawn != null)
             {

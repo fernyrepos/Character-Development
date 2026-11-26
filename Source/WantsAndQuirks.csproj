@@ -72,6 +72,7 @@
 
   <ItemGroup>
     <Publicize Include="Assembly-CSharp" />
+    <DoNotPublicize Include="Assembly-CSharp:Verse.Window.Margin" />
   </ItemGroup>
 
   <!-- The UI Rethemed look is its own project, built against UI Rethemed - Core. -->
