@@ -422,9 +422,15 @@ namespace WantsAndQuirks
                 var nodeCenter = new Vector2(center.x + node.drawPos.x, center.y + node.drawPos.y);
                 var nodeRect = new Rect(nodeCenter.x - r, nodeCenter.y - r, r * 2f, r * 2f);
 
-                if (node.spawnRealTime >= 0f)
+                if (!node.hasBeenViewed)
                 {
-                    var glowAge = Time.realtimeSinceStartup - node.spawnRealTime;
+                    node.hasBeenViewed = true;
+                    node.glowStartRealTime = Time.realtimeSinceStartup;
+                }
+
+                if (node.glowStartRealTime >= 0f)
+                {
+                    var glowAge = Time.realtimeSinceStartup - node.glowStartRealTime;
                     if (glowAge < NewRewardGlowDuration)
                     {
                         var glowT = glowAge / NewRewardGlowDuration;

@@ -345,8 +345,7 @@ while (pawnData.characterPoints >= pawnNeeded)
                     def = chosenDef,
                     item = chosenItem,
                     pawnTarget = chosenPawn,
-                    pos = new Vector2(Rand.Range(-100f, 100f), Rand.Range(-100f, 100f)),
-                    spawnRealTime = Time.realtimeSinceStartup
+                    pos = new Vector2(Rand.Range(-100f, 100f), Rand.Range(-100f, 100f))
                 };
                 node.drawPos = node.pos;
                 return node;
@@ -543,6 +542,11 @@ while (pawnData.characterPoints >= pawnNeeded)
         {
             var range = WantsAndQuirksMod.settings.wantGenerationFrequencyDays;
             return (int)(Rand.Range(range.min, (float)range.max) * GenDate.TicksPerDay);
+        }
+
+        public static bool IsExemptFromWants(this XenotypeDef def)
+        {
+            return def.defName == "AG_RandomCustom";
         }
 
         public static bool IsGrantedGene(this Gene gene)

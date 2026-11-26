@@ -10,7 +10,6 @@ namespace WantsAndQuirks
         public WantDef def;
         public int assignedTick;
         public int rerollCount;
-        [Unsaved(false)]
         public bool hasBeenViewed;
         [Unsaved(false)]
         public float glowStartRealTime = -1f;
@@ -33,6 +32,7 @@ namespace WantsAndQuirks
             Scribe_Defs.Look(ref def, "def");
             Scribe_Values.Look(ref assignedTick, "assignedTick");
             Scribe_Values.Look(ref rerollCount, "rerollCount");
+            Scribe_Values.Look(ref hasBeenViewed, "hasBeenViewed", true);
         }
 
         public virtual bool IsCompleted(Pawn pawn, WantWorkerContext context)

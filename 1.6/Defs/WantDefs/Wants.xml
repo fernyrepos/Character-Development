@@ -1898,8 +1898,8 @@
 
     <WantsAndQuirks.WantDef>
         <defName>WQE_WantSeeSomeoneDie</defName>
-        <label>Witness death</label>
-        <description>Maybe I'd like to see someone lose their life.</description>
+        <label>Witness unjust death</label>
+        <description>Maybe I'd like to see someone lose their life, someone who isn't our enemy.</description>
         <iconPath>UI/WantIcons/Murder</iconPath>
         <reward>1200</reward>
         <commonality>0.4</commonality>

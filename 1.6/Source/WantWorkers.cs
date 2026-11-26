@@ -446,7 +446,7 @@ namespace WantsAndQuirks
         public override bool CanGenerate(Pawn pawn) => GetRandomTarget(pawn) != null;
         public override Def GetRandomTarget(Pawn pawn)
         {
-            var undiscovered = DefDatabase<XenotypeDef>.AllDefsListForReading.Where(d => !DiscoveryCompat.IsDiscovered(d));
+            var undiscovered = DefDatabase<XenotypeDef>.AllDefsListForReading.Where(d => !d.IsExemptFromWants() && !DiscoveryCompat.IsDiscovered(d));
             return undiscovered.TryRandomElement(out var result) ? result : null;
         }
         public override bool IsTargetDiscovered(Def target) => target is XenotypeDef xeno && DiscoveryCompat.IsDiscovered(xeno);
@@ -635,7 +635,7 @@ namespace WantsAndQuirks
         public override bool CanGenerate(Pawn pawn) => GetRandomTarget(pawn) != null && base.CanGenerate(pawn);
         public override Def GetRandomTarget(Pawn pawn)
         {
-            var xenos = DefDatabase<XenotypeDef>.AllDefsListForReading;
+            var xenos = DefDatabase<XenotypeDef>.AllDefsListForReading.Where(d => !d.IsExemptFromWants());
             return xenos.TryRandomElement(out var result) ? result : null;
         }
 
@@ -727,7 +727,7 @@ namespace WantsAndQuirks
         public override bool CanGenerate(Pawn pawn) => GetRandomTarget(pawn) != null && base.CanGenerate(pawn);
         public override Def GetRandomTarget(Pawn pawn)
         {
-            var discovered = DefDatabase<XenotypeDef>.AllDefsListForReading.Where(d => DiscoveryCompat.IsDiscovered(d) && pawn.genes?.Xenotype != d);
+            var discovered = DefDatabase<XenotypeDef>.AllDefsListForReading.Where(d => !d.IsExemptFromWants() && DiscoveryCompat.IsDiscovered(d) && pawn.genes?.Xenotype != d);
             return discovered.TryRandomElement(out var result) ? result : null;
         }
 

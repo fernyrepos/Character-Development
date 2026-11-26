@@ -1,5 +1,6 @@
 using HarmonyLib;
 using RimWorld;
+using Verse;
 
 namespace WantsAndQuirks
 {
@@ -30,6 +31,9 @@ namespace WantsAndQuirks
         {
             if (ritual.Ritual?.outcomeEffect is RitualOutcomeEffectWorker_FromQuality fromQuality)
             {
+                if (fromQuality.def.outcomeChances.NullOrEmpty())
+                    return true;
+
                 var quality = fromQuality.GetQuality(ritual, ritual.Progress);
                 var outcome = fromQuality.GetOutcome(quality, ritual);
                 return outcome?.Positive ?? false;

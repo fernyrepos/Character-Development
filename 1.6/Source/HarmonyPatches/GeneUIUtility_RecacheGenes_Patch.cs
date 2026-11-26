@@ -7,8 +7,23 @@ namespace WantsAndQuirks
     [HarmonyPatch(typeof(GeneUIUtility), "RecacheGenes")]
     public static class GeneUIUtility_RecacheGenes_Patch
     {
-        public static void Postfix(Thing target)
+        public static void Postfix(Thing target, GeneSet genesOverride)
         {
+            if (target == null && genesOverride != null)
+            {
+                for (int i = GeneUIUtility.geneDefs.Count - 1; i >= 0; i--)
+                {
+                    var geneDef = GeneUIUtility.geneDefs[i];
+                    if (!BabyGeneDisplayUtility.IsQuirkGene(geneDef))
+                        continue;
+                    GeneUIUtility.geneDefs.RemoveAt(i);
+                    GeneUIUtility.gcx -= geneDef.biostatCpx;
+                    GeneUIUtility.met -= geneDef.biostatMet;
+                    GeneUIUtility.arc -= geneDef.biostatArc;
+                }
+                return;
+            }
+
             if (target is Pawn pawn && WantsAndQuirksUtility.TryGetWantsData(pawn, out var data))
             {
                 foreach (var link in data.grantedGenes)
