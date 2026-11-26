@@ -226,7 +226,7 @@ namespace WantsAndQuirks
             return velocitySum;
         }
 
-        // Draws the bubbles centred in rect. With fitToRect the field is scaled down (never up) so every bubble and label stays inside.
+        // Draws the bubbles centered in rect. With fitToRect the field is scaled down (never up) so every bubble and label stays inside.
         // blockedReason returns null for a claimable bubble, or the tooltip line explaining why it can't be claimed.
         public void Draw(Rect rect, bool fitToRect, Action<RewardNode> onClick, Func<RewardNode, string> blockedReason = null)
         {
@@ -368,7 +368,7 @@ namespace WantsAndQuirks
             return new Rect(nodeCenter.x - r, nodeCenter.y - r, r * 2f, r * 2f);
         }
 
-        // Largest scale (at most 1) at which every bubble and its label fits within halfSize of the centre.
+        // Largest scale (at most 1) at which every bubble and its label fits within halfSize of the center.
         private float TargetFitScale(Vector2 halfSize)
         {
             var maxX = 0f;
