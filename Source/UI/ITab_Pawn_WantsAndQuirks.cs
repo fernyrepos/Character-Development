@@ -94,7 +94,15 @@ namespace WantsAndQuirks
             var curY = rect.y;
 
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x, curY, rect.width, 30f), "WQ_PawnWants".Translate(pawn));
+            Widgets.Label(new Rect(rect.x, curY, rect.width - 110f, 30f), "WQ_PawnWants".Translate(pawn));
+            Text.Font = GameFont.Small;
+            var menuRect = new Rect(rect.xMax - 105f, curY + 3f, 95f, 24f);
+            TooltipHandler.TipRegion(menuRect, DefsOf.WQ_CharactersMenu.description);
+            if (Widgets.ButtonText(menuRect, DefsOf.WQ_CharactersMenu.LabelCap))
+            {
+                Find.MainTabsRoot.SetCurrentTab(DefsOf.WQ_CharactersMenu);
+                SoundDefOf.Click.PlayOneShotOnCamera();
+            }
             curY += 30f;
 
             Text.Font = GameFont.Tiny;
