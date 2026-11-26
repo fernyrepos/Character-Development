@@ -13,7 +13,7 @@ namespace WantsAndQuirks
         {
             settings = GetSettings<WantsAndQuirksSettings>();
             harmony = new Harmony("WantsAndQuirksMod");
-            harmony.PatchAll();
+            harmony.PatchAll(typeof(WantsAndQuirksMod).Assembly);
         }
 
         public override void DoSettingsWindowContents(Rect inRect)

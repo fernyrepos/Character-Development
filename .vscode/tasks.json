@@ -13,7 +13,7 @@
             "command": "dotnet",
             "args": [
                 "build",
-                "${workspaceFolder}/1.6/Source/WantsAndQuirks.csproj"
+                "${workspaceFolder}/Source/WantsAndQuirks.csproj"
             ],
             "problemMatcher": "$msCompile",
             "group": {
