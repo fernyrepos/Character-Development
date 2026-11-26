@@ -74,4 +74,10 @@
     <Publicize Include="Assembly-CSharp" />
   </ItemGroup>
 
+  <!-- The UI Rethemed look is its own project, built against UI Rethemed - Core. -->
+  <ItemGroup>
+    <Compile Remove="UIRethemed\**" />
+    <None Remove="UIRethemed\**" />
+  </ItemGroup>
+
 </Project>

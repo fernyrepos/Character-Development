@@ -49,10 +49,49 @@ namespace WantsAndQuirks
             }
         }
 
+        public bool RewardsOpen => rewardsOpen;
+        public RewardBubbleField Bubbles => bubbles;
+
         public override void UpdateSize()
         {
+            var look = CharacterDevelopmentLook.ActiveWantsTab;
+            var pawn = SelPawn;
+            if (look != null && pawn != null)
+            {
+                try
+                {
+                    size = look.Size(this, pawn);
+                    return;
+                }
+                catch (System.Exception ex)
+                {
+                    CharacterDevelopmentLook.WantsTabFailed(ex);
+                }
+            }
             var height = WantsAndQuirksMod.settings.pawnSpecificRewardPoints ? 467f : 413f;
             size = new Vector2(rewardsOpen ? MainWidth + RewardsPanelWidth : MainWidth, height);
+        }
+
+        public void Close() => CloseTab();
+
+        public static void OpenCharactersMenu()
+        {
+            Find.MainTabsRoot.SetCurrentTab(DefsOf.WQ_CharactersMenu);
+            SoundDefOf.Click.PlayOneShotOnCamera();
+        }
+
+        // Opens or closes the rewards beside the tab; opening needs a reward point to spend.
+        public void ToggleRewards(Pawn pawn)
+        {
+            if (!rewardsOpen && WantsAndQuirksUtility.RewardPointsToSpend(pawn) <= 0)
+                return;
+            rewardsOpen = !rewardsOpen;
+            if (rewardsOpen)
+            {
+                RewardBubbleField.PrepareNodes();
+                bubbles.InitPhysics();
+            }
+            SoundDefOf.Click.PlayOneShotOnCamera();
         }
 
         public override void TabUpdate()
@@ -71,6 +110,19 @@ namespace WantsAndQuirks
             {
                 lastPawn = pawn;
                 rewardsOpen = false;
+            }
+            var look = CharacterDevelopmentLook.ActiveWantsTab;
+            if (look != null)
+            {
+                try
+                {
+                    look.Draw(this, pawn, new Rect(0f, 0f, size.x, size.y));
+                    return;
+                }
+                catch (System.Exception ex)
+                {
+                    CharacterDevelopmentLook.WantsTabFailed(ex);
+                }
             }
             var data = pawn.GetWantsData();
             var rect = new Rect(0f, 0f, size.x, size.y);
@@ -100,8 +152,7 @@ namespace WantsAndQuirks
             TooltipHandler.TipRegion(menuRect, DefsOf.WQ_CharactersMenu.description);
             if (Widgets.ButtonText(menuRect, DefsOf.WQ_CharactersMenu.LabelCap))
             {
-                Find.MainTabsRoot.SetCurrentTab(DefsOf.WQ_CharactersMenu);
-                SoundDefOf.Click.PlayOneShotOnCamera();
+                OpenCharactersMenu();
             }
             curY += 30f;
 
@@ -380,13 +431,7 @@ namespace WantsAndQuirks
             }
             if (Widgets.ButtonText(rect, "WQ_Rewards".Translate(), active: active) && active)
             {
-                rewardsOpen = !rewardsOpen;
-                if (rewardsOpen)
-                {
-                    RewardBubbleField.PrepareNodes();
-                    bubbles.InitPhysics();
-                }
-                SoundDefOf.Click.PlayOneShotOnCamera();
+                ToggleRewards(pawn);
             }
             GUI.color = Color.white;
         }
@@ -404,21 +449,13 @@ namespace WantsAndQuirks
 
             var fieldRect = new Rect(rect.x, rect.y + 58f, rect.width, rect.height - 58f);
             Widgets.DrawBoxSolid(fieldRect, QuirkContainerColor);
-            bubbles.Draw(fieldRect, true, node => ClaimForPawn(pawn, node), node => BlockedReason(pawn, node));
+            bubbles.Draw(fieldRect, true, node => ClaimForPawn(pawn, node), node => WantsAndQuirksUtility.RewardBlockedReason(pawn, node));
         }
 
-        private string BlockedReason(Pawn pawn, RewardNode node)
+        // Gives the bubble's reward to this pawn; the panel closes once no points are left.
+        public void ClaimForPawn(Pawn pawn, RewardNode node)
         {
-            if (!node.def.Worker.CanBestowOn(pawn, node.item, node.pawnTarget))
-                return "WQ_CannotReceiveReward".Translate(pawn.LabelShort);
-            if (WantsAndQuirksUtility.RewardPointsToSpend(pawn) <= 0)
-                return "WQ_NoRewardPointsToSpend".Translate();
-            return null;
-        }
-
-        private void ClaimForPawn(Pawn pawn, RewardNode node)
-        {
-            var reason = BlockedReason(pawn, node);
+            var reason = WantsAndQuirksUtility.RewardBlockedReason(pawn, node);
             if (reason != null)
             {
                 Messages.Message(reason, MessageTypeDefOf.RejectInput, false);

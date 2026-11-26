@@ -36,6 +36,7 @@
         <li>cyanobot.CyanobotsGenes</li>
         <li>ClimatePreferenceGenes.Mod</li>
         <li>Goji.GojisMiscGenes</li>
+        <li>LazyFridayStudio.UIRethemed.Core</li>
     </loadAfter>
     <modDependencies>
       <li>

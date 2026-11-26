@@ -26,6 +26,8 @@ namespace WantsAndQuirks
         private Vector2 dragStartMousePos;
         private bool wasDraggingNode;
         private bool hasSignificantDrag;
+        // Another look's rarity colors; null keeps the classic ones.
+        public Func<RewardRarity, Color> rarityColor;
         private float fitScale = 1f;
         private bool snapFitScale = true;
 
@@ -322,7 +324,7 @@ namespace WantsAndQuirks
                 }
 
                 var tint = blocked != null ? BlockedBubbleTint : Color.white;
-                GUI.color = GetBubbleColor(node.def.rarity) * tint;
+                GUI.color = (rarityColor != null ? rarityColor(node.def.rarity) : GetBubbleColor(node.def.rarity)) * tint;
                 if (blocked == null && Mouse.IsOver(nodeRect))
                 {
                     GUI.color = Color.Lerp(GUI.color, Color.white, 0.3f);

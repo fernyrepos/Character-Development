@@ -268,14 +268,7 @@ namespace WantsAndQuirks
             Text.Anchor = TextAnchor.UpperLeft;
         }
 
-        private static string BlockedReason(Pawn pawn, RewardNode node)
-        {
-            if (!node.def.Worker.CanBestowOn(pawn, node.item, node.pawnTarget))
-                return "WQ_CannotReceiveReward".Translate(pawn.LabelShort);
-            if (WantsAndQuirksUtility.RewardPointsToSpend(pawn) <= 0)
-                return "WQ_NoRewardPointsToSpend".Translate();
-            return null;
-        }
+        private static string BlockedReason(Pawn pawn, RewardNode node) => WantsAndQuirksUtility.RewardBlockedReason(pawn, node);
 
         private void ClaimReward(RewardNode node)
         {

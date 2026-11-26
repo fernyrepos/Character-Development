@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WQ_UIR_CloseRewards>Close the rewards.</WQ_UIR_CloseRewards>
+  <WQ_UIR_ColonyCharacterPoints>Colony character points</WQ_UIR_ColonyCharacterPoints>
+  <WQ_UIR_PointsTip>Completed wants give character points. Every {0} make one reward point.\n\nReward points to spend: {1}</WQ_UIR_PointsTip>
+  <WQ_UIR_MentalBreakTag>mental break</WQ_UIR_MentalBreakTag>
+  <WQ_UIR_Waiting>Wanted for {0}</WQ_UIR_Waiting>
+  <WQ_UIR_Reroll>Reroll</WQ_UIR_Reroll>
+  <WQ_UIR_NoQuirks>No quirks yet. Spend reward points to give some.</WQ_UIR_NoQuirks>
+  <WQ_UIR_RemoveQuirk>Remove quirk</WQ_UIR_RemoveQuirk>
+</LanguageData>

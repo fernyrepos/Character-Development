@@ -487,6 +487,16 @@ while (pawnData.characterPoints >= pawnNeeded)
             return quirk.def.requiresItem && quirk.item?.uiIcon != null ? quirk.item.uiIcon : quirk.def.Icon;
         }
 
+        // Why the pawn can't claim the bubble's reward now, or null when it can.
+        public static string RewardBlockedReason(Pawn pawn, RewardNode node)
+        {
+            if (!node.def.Worker.CanBestowOn(pawn, node.item, node.pawnTarget))
+                return "WQ_CannotReceiveReward".Translate(pawn.LabelShort);
+            if (RewardPointsToSpend(pawn) <= 0)
+                return "WQ_NoRewardPointsToSpend".Translate();
+            return null;
+        }
+
         public static int RewardPointsToSpend(Pawn pawn)
         {
             return WantsAndQuirksMod.settings.pawnSpecificRewardPoints ? pawn.GetWantsData().rewardPoints : State.rewardPoints;
