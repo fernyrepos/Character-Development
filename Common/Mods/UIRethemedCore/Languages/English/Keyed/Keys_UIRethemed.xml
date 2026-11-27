@@ -28,4 +28,27 @@
   <WQ_UIR_OpenWantsTab>Go to this character and open their wants tab.</WQ_UIR_OpenWantsTab>
   <WQ_UIR_RewardsFor>Rewards for {0}</WQ_UIR_RewardsFor>
   <WQ_UIR_ClickToGive>Click a reward to give it to {0}. More rewards appear as bubbles are claimed.</WQ_UIR_ClickToGive>
+  <WQ_UIR_RewardsPage>Rewards</WQ_UIR_RewardsPage>
+  <WQ_UIR_Days>{0} days</WQ_UIR_Days>
+  <WQ_UIR_StartingWants>Starting wants</WQ_UIR_StartingWants>
+  <WQ_UIR_MaxActiveWants>Maximum active wants</WQ_UIR_MaxActiveWants>
+  <WQ_UIR_RerollsPerWant>Rerolls per want</WQ_UIR_RerollsPerWant>
+  <WQ_UIR_NewWantMin>New wants after at least</WQ_UIR_NewWantMin>
+  <WQ_UIR_NewWantMax>New wants after at most</WQ_UIR_NewWantMax>
+  <WQ_UIR_NewWantTip>A new want appears after a random number of days between these two.</WQ_UIR_NewWantTip>
+  <WQ_UIR_PointsNeeded>Character points for a reward</WQ_UIR_PointsNeeded>
+  <WQ_UIR_PointsIncrease>Increase after each reward</WQ_UIR_PointsIncrease>
+  <WQ_UIR_BubblesPerRoll>Bubbles per roll</WQ_UIR_BubblesPerRoll>
+  <WQ_UIR_Commonality>Commonality</WQ_UIR_Commonality>
+  <WQ_UIR_CommonalityTip>How often this want comes up compared with the others.</WQ_UIR_CommonalityTip>
+  <WQ_UIR_SearchWants>Search wants</WQ_UIR_SearchWants>
+  <WQ_UIR_NoWantsFound>No wants match the search.</WQ_UIR_NoWantsFound>
+  <WQ_UIR_ResetWants>Reset all</WQ_UIR_ResetWants>
+  <WQ_UIR_ResetWantsTip>Turn every want on this page back on and set its commonality to 100%.</WQ_UIR_ResetWantsTip>
+  <WQ_UIR_ResetWantsNothing>Every want on this page is on, at 100%.</WQ_UIR_ResetWantsNothing>
+  <WQ_UIR_ResetWantsConfirm>Turn every want on this page back on and set its commonality to 100%?</WQ_UIR_ResetWantsConfirm>
+  <WQ_UIR_RarityCommon>Common</WQ_UIR_RarityCommon>
+  <WQ_UIR_RarityUncommon>Uncommon</WQ_UIR_RarityUncommon>
+  <WQ_UIR_RarityRare>Rare</WQ_UIR_RarityRare>
+  <WQ_UIR_RarityLegendary>Legendary</WQ_UIR_RarityLegendary>
 </LanguageData>

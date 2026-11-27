@@ -79,6 +79,42 @@ namespace WantsAndQuirks
             return GetCommonalityModifierPercent(def) / 100f;
         }
 
+        // Sets a want's commonality; 100% removes the entry, as the settings slider does.
+        public void SetCommonalityModifierPercent(WantDef def, float pct)
+        {
+            if (Mathf.Approximately(pct, 100f))
+                wantCommonalityModifiers.Remove(def.defName);
+            else
+                wantCommonalityModifiers[def.defName] = pct;
+        }
+
+        public List<WantDef> NormalWantDefs
+        {
+            get
+            {
+                EnsureWantDefCaches();
+                return normalWantDefsCache;
+            }
+        }
+
+        public List<WantDef> TraumaticWantDefs
+        {
+            get
+            {
+                EnsureWantDefCaches();
+                return traumaticWantDefsCache;
+            }
+        }
+
+        public List<RewardDef> RewardDefs
+        {
+            get
+            {
+                EnsureWantDefCaches();
+                return rewardDefsCache;
+            }
+        }
+
         private void EnsureWantDefCaches()
         {
             if (normalWantDefsCache != null)
@@ -151,7 +187,7 @@ namespace WantsAndQuirks
             ls.End();
         }
 
-        private static Texture GetDisplayIcon(WantDef def)
+        public static Texture GetDisplayIcon(WantDef def)
         {
             if (def.discoveryRequirementThing != null && !def.preferIconPath)
                 return def.discoveryRequirementThing.uiIcon;
@@ -238,7 +274,7 @@ namespace WantsAndQuirks
             Widgets.EndScrollView();
         }
 
-        private static Texture GetDisplayIcon(RewardDef def)
+        public static Texture GetDisplayIcon(RewardDef def)
         {
             if (def.iconPath.NullOrEmpty() && (def.gene == null || def.gene.iconPath.NullOrEmpty()))
                 return null;

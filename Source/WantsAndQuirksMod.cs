@@ -18,6 +18,19 @@ namespace WantsAndQuirks
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
+            var look = CharacterDevelopmentLook.ActiveSettings;
+            if (look != null)
+            {
+                try
+                {
+                    look.Draw(this, inRect);
+                    return;
+                }
+                catch (System.Exception ex)
+                {
+                    CharacterDevelopmentLook.SettingsFailed(ex);
+                }
+            }
             settings.DoSettingsWindowContents(inRect);
         }
 
