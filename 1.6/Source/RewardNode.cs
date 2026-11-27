@@ -14,8 +14,9 @@ namespace WantsAndQuirks
         public Vector2 drawPos;
         [Unsaved(false)]
         public Vector2 dampVelocity;
+        public bool hasBeenViewed;
         [Unsaved(false)]
-        public float spawnRealTime = -1f;
+        public float glowStartRealTime = -1f;
 
         public void ExposeData()
         {
@@ -23,6 +24,7 @@ namespace WantsAndQuirks
             Scribe_Defs.Look(ref item, "item");
             Scribe_References.Look(ref pawnTarget, "pawnTarget");
             Scribe_Values.Look(ref pos, "pos");
+            Scribe_Values.Look(ref hasBeenViewed, "hasBeenViewed", true);
         }
 
         public string LabelCap => def.requiresItem ? string.Format(def.LabelCap, item.label).CapitalizeFirst() : (def.requiresPawn && pawnTarget != null ? string.Format(def.LabelCap, pawnTarget.LabelShort).CapitalizeFirst() : def.LabelCap);

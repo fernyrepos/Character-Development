@@ -49,7 +49,9 @@ namespace WantsAndQuirks
                 }
                 else
                 {
-                    newWant = new ActiveWant { def = chosen, assignedTick = Find.TickManager.TicksGame };
+                    newWant = chosen.Worker.CreateActiveWant(pawn);
+                    newWant.def = chosen;
+                    newWant.assignedTick = Find.TickManager.TicksGame;
                 }
             }
 
