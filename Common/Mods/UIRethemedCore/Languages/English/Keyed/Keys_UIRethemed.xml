@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WQ_UIR_CloseRewards>Close the rewards.</WQ_UIR_CloseRewards>
+  <WQ_UIR_ColonyCharacterPoints>Colony character points</WQ_UIR_ColonyCharacterPoints>
+  <WQ_UIR_PointsTip>Completed wants give character points. Every {0} make one reward point.\n\nReward points to spend: {1}</WQ_UIR_PointsTip>
+  <WQ_UIR_MentalBreakTag>mental break</WQ_UIR_MentalBreakTag>
+  <WQ_UIR_Waiting>Wanted for {0}</WQ_UIR_Waiting>
+  <WQ_UIR_Reroll>Reroll</WQ_UIR_Reroll>
+  <WQ_UIR_NoQuirks>No quirks yet. Spend reward points to give some.</WQ_UIR_NoQuirks>
+  <WQ_UIR_RemoveQuirk>Remove quirk</WQ_UIR_RemoveQuirk>
+  <WQ_UIR_CharacterList>Characters</WQ_UIR_CharacterList>
+  <WQ_UIR_StatCharacters>Characters</WQ_UIR_StatCharacters>
+  <WQ_UIR_StatCharactersTip>Characters with unfulfilled wants or reward points to spend.</WQ_UIR_StatCharactersTip>
+  <WQ_UIR_StatWantsTip>Unfulfilled wants across these characters.</WQ_UIR_StatWantsTip>
+  <WQ_UIR_StatPoints>Reward points</WQ_UIR_StatPoints>
+  <WQ_UIR_StatPointsTip>Reward points waiting to be spent on rewards.</WQ_UIR_StatPointsTip>
+  <WQ_UIR_StatQuirksTip>Quirks these characters have.</WQ_UIR_StatQuirksTip>
+  <WQ_UIR_SortName>Name</WQ_UIR_SortName>
+  <WQ_UIR_SortMenu>Sort characters</WQ_UIR_SortMenu>
+  <WQ_UIR_SortTip>Sorted by {0}, {1}.</WQ_UIR_SortTip>
+  <WQ_UIR_SearchHint>Search characters</WQ_UIR_SearchHint>
+  <WQ_UIR_SearchFound>{0} found</WQ_UIR_SearchFound>
+  <WQ_UIR_Help>How rewards work</WQ_UIR_Help>
+  <WQ_UIR_NoCharacters>No characters have wants or reward points right now.</WQ_UIR_NoCharacters>
+  <WQ_UIR_NoneFound>No characters match the search.</WQ_UIR_NoneFound>
+  <WQ_UIR_NoOneSelected>No one selected</WQ_UIR_NoOneSelected>
+  <WQ_UIR_SelectCharacter>Click a character to see their wants and quirks and give them rewards. Double-click to go to them.</WQ_UIR_SelectCharacter>
+  <WQ_UIR_OpenWantsTab>Go to this character and open their wants tab.</WQ_UIR_OpenWantsTab>
+  <WQ_UIR_RewardsFor>Rewards for {0}</WQ_UIR_RewardsFor>
+  <WQ_UIR_ClickToGive>Click a reward to give it to {0}. More rewards appear as bubbles are claimed.</WQ_UIR_ClickToGive>
+  <WQ_UIR_RewardsPage>Rewards</WQ_UIR_RewardsPage>
+  <WQ_UIR_Days>{0} days</WQ_UIR_Days>
+  <WQ_UIR_StartingWants>Starting wants</WQ_UIR_StartingWants>
+  <WQ_UIR_MaxActiveWants>Maximum active wants</WQ_UIR_MaxActiveWants>
+  <WQ_UIR_RerollsPerWant>Rerolls per want</WQ_UIR_RerollsPerWant>
+  <WQ_UIR_NewWantMin>New wants after at least</WQ_UIR_NewWantMin>
+  <WQ_UIR_NewWantMax>New wants after at most</WQ_UIR_NewWantMax>
+  <WQ_UIR_NewWantTip>A new want appears after a random number of days between these two.</WQ_UIR_NewWantTip>
+  <WQ_UIR_PointsNeeded>Character points for a reward</WQ_UIR_PointsNeeded>
+  <WQ_UIR_PointsIncrease>Increase after each reward</WQ_UIR_PointsIncrease>
+  <WQ_UIR_BubblesPerRoll>Bubbles per roll</WQ_UIR_BubblesPerRoll>
+  <WQ_UIR_Commonality>Commonality</WQ_UIR_Commonality>
+  <WQ_UIR_CommonalityTip>How often this want comes up compared with the others.</WQ_UIR_CommonalityTip>
+  <WQ_UIR_SearchWants>Search wants</WQ_UIR_SearchWants>
+  <WQ_UIR_NoWantsFound>No wants match the search.</WQ_UIR_NoWantsFound>
+  <WQ_UIR_ResetWants>Reset all</WQ_UIR_ResetWants>
+  <WQ_UIR_ResetWantsTip>Turn every want on this page back on and set its commonality to 100%.</WQ_UIR_ResetWantsTip>
+  <WQ_UIR_ResetWantsNothing>Every want on this page is on, at 100%.</WQ_UIR_ResetWantsNothing>
+  <WQ_UIR_ResetWantsConfirm>Turn every want on this page back on and set its commonality to 100%?</WQ_UIR_ResetWantsConfirm>
+  <WQ_UIR_RarityCommon>Common</WQ_UIR_RarityCommon>
+  <WQ_UIR_RarityUncommon>Uncommon</WQ_UIR_RarityUncommon>
+  <WQ_UIR_RarityRare>Rare</WQ_UIR_RarityRare>
+  <WQ_UIR_RarityLegendary>Legendary</WQ_UIR_RarityLegendary>
+</LanguageData>

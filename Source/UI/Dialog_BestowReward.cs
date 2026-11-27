@@ -53,34 +53,7 @@ namespace WantsAndQuirks
 
                 if (Widgets.ButtonInvisible(rowRect))
                 {
-                    if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
-                    {
-                        var pData = p.GetWantsData();
-                        if (pData.rewardPoints > 0)
-                        {
-                            pData.rewardPoints--;
-                        }
-                    }
-                    else
-                    {
-                        State.rewardPoints = Mathf.Max(State.rewardPoints - 1, 0);
-                    }
-                    WantsAndQuirksUtility.AddQuirk(p, node.def, node.item, node.pawnTarget);
-                    SoundDefOf.Quest_Succeded.PlayOneShotOnCamera();
-
-                    if (WantsAndQuirksMod.settings.rerollBubblesOnSelection)
-                    {
-                        WantsAndQuirksUtility.GenerateGlobalRewardBubbles();
-                    }
-                    else
-                    {
-                        State.rewardNodes.Remove(node);
-                        var replacement = WantsAndQuirksUtility.GenerateSingleRewardBubble(State.rewardNodes);
-                        if (replacement != null)
-                        {
-                            State.rewardNodes.Add(replacement);
-                        }
-                    }
+                    WantsAndQuirksUtility.BestowReward(p, node);
                     parentWindow.InitPhysics();
                     Close();
                     break;

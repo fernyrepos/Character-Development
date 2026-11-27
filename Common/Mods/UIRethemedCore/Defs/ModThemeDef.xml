@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <UIRethemed.Core.ModThemeDef>
+    <defName>WQ_Theme</defName>
+    <label>Character Development</label>
+    <description>The colors of Character Development's wants tab and Characters menu.</description>
+    <mod>ferny.characterdevelopment</mod>
+    <icon>sparkle</icon>
+    <colors>
+      <li>
+        <key>rarityCommon</key>
+        <label>common</label>
+        <description>Common rewards.</description>
+        <group>Rewards</group>
+        <color>666666</color>
+      </li>
+      <li>
+        <key>rarityUncommon</key>
+        <label>uncommon</label>
+        <description>Uncommon rewards.</description>
+        <group>Rewards</group>
+        <color>4D99CC</color>
+      </li>
+      <li>
+        <key>rarityRare</key>
+        <label>rare</label>
+        <description>Rare rewards.</description>
+        <group>Rewards</group>
+        <color>9966CC</color>
+      </li>
+      <li>
+        <key>rarityLegendary</key>
+        <label>legendary</label>
+        <description>Legendary rewards.</description>
+        <group>Rewards</group>
+        <color>CCB34D</color>
+      </li>
+      <li>
+        <key>reward</key>
+        <label>reward points</label>
+        <description>The rewards button and the points a want pays.</description>
+        <group>Wants</group>
+        <color>FFD959</color>
+      </li>
+      <li>
+        <key>progress</key>
+        <label>progress</label>
+        <description>How far a want has come.</description>
+        <group>Wants</group>
+        <color>7ECED6</color>
+      </li>
+      <li>
+        <key>mentalBreak</key>
+        <label>mental break</label>
+        <description>Wants caused by a mental break.</description>
+        <group>Wants</group>
+        <color>B88586</color>
+      </li>
+      <li>
+        <key>points</key>
+        <label>character points</label>
+        <description>Character points toward the next reward point.</description>
+        <group>Wants</group>
+        <color>A6BBC2</color>
+      </li>
+      <li>
+        <key>newGlow</key>
+        <label>new want</label>
+        <description>The glow on a want not seen before.</description>
+        <group>Wants</group>
+        <color>FFD959</color>
+      </li>
+    </colors>
+  </UIRethemed.Core.ModThemeDef>
+</Defs>

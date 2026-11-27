@@ -13,11 +13,24 @@ namespace WantsAndQuirks
         {
             settings = GetSettings<WantsAndQuirksSettings>();
             harmony = new Harmony("WantsAndQuirksMod");
-            harmony.PatchAll();
+            harmony.PatchAll(typeof(WantsAndQuirksMod).Assembly);
         }
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
+            var look = CharacterDevelopmentLook.ActiveSettings;
+            if (look != null)
+            {
+                try
+                {
+                    look.Draw(this, inRect);
+                    return;
+                }
+                catch (System.Exception ex)
+                {
+                    CharacterDevelopmentLook.SettingsFailed(ex);
+                }
+            }
             settings.DoSettingsWindowContents(inRect);
         }
 

@@ -56,4 +56,12 @@
   <WQ_SettingsTabTraumaticWants>Traumatic Wants</WQ_SettingsTabTraumaticWants>
   <WQ_SettingsTabModifiers>Modifiers</WQ_SettingsTabModifiers>
   <WQ_CommonalityModifier>Commonality modifier: {0}%</WQ_CommonalityModifier>
+  <WQ_Rewards>Rewards</WQ_Rewards>
+  <WQ_RewardsButtonTip>Spend a reward point on one of the rewards.\n\nReward points: {0}</WQ_RewardsButtonTip>
+  <WQ_NoRewardPointsToSpend>No reward points to spend. Complete wants to earn more.</WQ_NoRewardPointsToSpend>
+  <WQ_CannotReceiveReward>{0} can't receive this reward.</WQ_CannotReceiveReward>
+  <WQ_DismissWant>Dismiss want</WQ_DismissWant>
+  <WQ_NoRerollsLeft>No rerolls left</WQ_NoRerollsLeft>
+  <WQ_WantProgress>Progress: {0} / {1}</WQ_WantProgress>
+  <WQ_GivingRewardsTo>Giving rewards to {0}. Reward points: {1}</WQ_GivingRewardsTo>
 </LanguageData>

@@ -480,6 +480,61 @@ while (pawnData.characterPoints >= pawnNeeded)
             }
         }
 
+        public static Texture QuirkIcon(Quirk quirk, float size)
+        {
+            if (quirk.def.requiresPawn && quirk.pawnTarget != null)
+                return PortraitsCache.Get(quirk.pawnTarget, new Vector2(size, size), Rot4.South, cameraZoom: 1.2f);
+            return quirk.def.requiresItem && quirk.item?.uiIcon != null ? quirk.item.uiIcon : quirk.def.Icon;
+        }
+
+        // Why the pawn can't claim the bubble's reward now, or null when it can.
+        public static string RewardBlockedReason(Pawn pawn, RewardNode node)
+        {
+            if (!node.def.Worker.CanBestowOn(pawn, node.item, node.pawnTarget))
+                return "WQ_CannotReceiveReward".Translate(pawn.LabelShort);
+            if (RewardPointsToSpend(pawn) <= 0)
+                return "WQ_NoRewardPointsToSpend".Translate();
+            return null;
+        }
+
+        public static int RewardPointsToSpend(Pawn pawn)
+        {
+            return WantsAndQuirksMod.settings.pawnSpecificRewardPoints ? pawn.GetWantsData().rewardPoints : State.rewardPoints;
+        }
+
+        // Spends one reward point, gives the bubble's reward to the pawn and replaces the bubble (or rerolls all of them).
+        public static void BestowReward(Pawn pawn, RewardNode node)
+        {
+            if (WantsAndQuirksMod.settings.pawnSpecificRewardPoints)
+            {
+                var pData = pawn.GetWantsData();
+                if (pData.rewardPoints > 0)
+                {
+                    pData.rewardPoints--;
+                }
+            }
+            else
+            {
+                State.rewardPoints = Mathf.Max(State.rewardPoints - 1, 0);
+            }
+            AddQuirk(pawn, node.def, node.item, node.pawnTarget);
+            SoundDefOf.Quest_Succeded.PlayOneShotOnCamera();
+
+            if (WantsAndQuirksMod.settings.rerollBubblesOnSelection)
+            {
+                GenerateGlobalRewardBubbles();
+            }
+            else
+            {
+                State.rewardNodes.Remove(node);
+                var replacement = GenerateSingleRewardBubble(State.rewardNodes);
+                if (replacement != null)
+                {
+                    State.rewardNodes.Add(replacement);
+                }
+            }
+        }
+
         public static void TickWants(Pawn pawn)
         {
             var data = pawn.GetWantsData();
