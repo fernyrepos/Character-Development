@@ -32,7 +32,8 @@ namespace WantsAndQuirks
         BoardedVehicle,
         AnimalTamed,
         BuildingConstructed,
-        GaveBirth
+        GaveBirth,
+        Fished
     }
 
     public struct WantWorkerContext

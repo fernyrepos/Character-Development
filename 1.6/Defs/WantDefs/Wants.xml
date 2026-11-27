@@ -1844,8 +1844,7 @@
         <reward>250</reward>
         <commonality>1</commonality>
         <minimumTechLevel>Neolithic</minimumTechLevel>
-        <workerClass>WantsAndQuirks.WantWorker_Thought</workerClass>
-        <completedByThought>VCEF_FishingThought</completedByThought>
+        <workerClass>WantsAndQuirks.WantWorker_Fish</workerClass>
     </WantsAndQuirks.WantDef>
 
     <WantsAndQuirks.WantDef MayRequire="VanillaExpanded.VEE">

@@ -13,6 +13,11 @@ namespace WantsAndQuirks
         }
     }
 
+    public class WantWorker_Fish : WantWorker
+    {
+        public override bool IsCompleted(Pawn pawn, WantWorkerContext context) => context.triggerType == WantTriggerType.Fished;
+    }
+
     public class WantWorker_FreedFromSlavery : WantWorker_Thought
     {
         public override bool CanGenerate(Pawn pawn)
